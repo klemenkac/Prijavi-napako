@@ -173,16 +173,12 @@ public class ActivityListMain extends AppCompatActivity {
                 builder.setPositiveButton("Yes", dialogClickListener);
                 builder.setNegativeButton("No", dialogClickListener);
 */
-
-
                 builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialogInterface) {
                         mRecyclerView.getAdapter().notifyDataSetChanged();
                     }
                 });
-
-
 
                 AlertDialog alert = builder.create();
                 alert.show();

@@ -1,7 +1,15 @@
 package com.example.kac.prijavinapako;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -10,11 +18,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dropbox.client2.DropboxAPI;
+import com.dropbox.client2.ProgressListener;
+import com.dropbox.client2.android.AndroidAuthSession;
+import com.dropbox.client2.session.AccessTokenPair;
+import com.dropbox.client2.session.AppKeyPair;
+import com.dropbox.client2.session.Session;
+import com.dropbox.client2.session.Session.AccessType;
+import com.dropbox.client2.session.TokenPair;
 import com.example.DataAll;
 import com.example.Lokacija;
 import com.example.LokacijaTag;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Date;
 
 import com.frosquivel.magicalcamera.MagicalCamera;
@@ -31,6 +50,14 @@ import static com.example.kac.prijavinapako.R.id.spinnerTipNapake;
 
 public class ActivityLocation extends AppCompatActivity {
 
+    private DropboxAPI dropboxAPI;
+    private boolean isUserLoggedIn;
+
+    private final static String DROPBOX_FILE_DIR="/DropboxDemo/";
+    private final static String DROPBOX_NAME="dropbox_prefs";
+    private final static String ACCESS_KEY="0ixgwcxhmqcx7gv";
+    private final static String ACCESS_SECRET="bjxdty6lfwlq323";
+    private  final static AccessType ACCESS_TYPE = AccessType.DROPBOX;
 
     ApplicationMy app;
     ImageView ivSlika;
@@ -52,7 +79,7 @@ public class ActivityLocation extends AppCompatActivity {
             , "Dom 14", "Dom 15"};
 
     String [] TIPLIST = {"Elektro","Oprema","Vodovod","Ogrevanje","Internet","Požarne naprave","Drugo"};
-
+    private DropboxAPI<AndroidAuthSession> mDBApi;
     //ELEKTRO: Žarnica, Vtičnica, Televizija, Drugo
     //OPREMA: Kuhinja, Kopalnica, Garderoba, WC, Soba, Drugo
     //VODOVOD: Kuhinja, Kopalnica, Kopalnica, Drugo
@@ -63,6 +90,9 @@ public class ActivityLocation extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
 
@@ -80,6 +110,7 @@ public class ActivityLocation extends AppCompatActivity {
         ivSlika =(ImageView) findViewById(R.id.imageViewmain);
         edS = (EditText) findViewById(R.id.txtSoba);
         //edT = (EditText) findViewById(R.id.txtTip);
+        domSpinner.setHintTextColor(Color.BLUE);
         edO = (EditText) findViewById(R.id.txtOpis);
         tvDatum = (TextView) findViewById(R.id.datum);
         stateNew = false;
@@ -96,7 +127,26 @@ public class ActivityLocation extends AppCompatActivity {
         }
 
         ID="";
+
+        AppKeyPair appKeyPair = new AppKeyPair(ACCESS_KEY, ACCESS_SECRET);
+        AndroidAuthSession session;
+
+        SharedPreferences prefs = getSharedPreferences(DROPBOX_NAME,0);
+        String key = prefs.getString(ACCESS_KEY,null);
+        String secret = prefs.getString(ACCESS_SECRET,null);
+
+        if(key != null && secret != null){
+            AccessTokenPair token = new AccessTokenPair(ACCESS_KEY,ACCESS_SECRET);
+            session=new AndroidAuthSession(appKeyPair,ACCESS_TYPE,token);
+
+        }
+        else{
+            session = new AndroidAuthSession(appKeyPair,ACCESS_TYPE);
+        }
+
+        dropboxAPI = new DropboxAPI(session);
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -156,10 +206,29 @@ public class ActivityLocation extends AppCompatActivity {
         } else {
             System.out.println("Nič ni v extras!");
         }
+
+        AndroidAuthSession session = (AndroidAuthSession)dropboxAPI.getSession();
+        if(session.authenticationSuccessful()){
+            try{
+                session.finishAuthentication();
+
+                TokenPair tokens = session.getAccessTokenPair();
+                SharedPreferences prefs = getSharedPreferences(DROPBOX_NAME,0);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString(ACCESS_KEY,tokens.key);
+                editor.putString(ACCESS_SECRET,tokens.secret);
+                editor.commit();
+
+            } catch(IllegalStateException e){
+                Toast.makeText(this,"Error", Toast.LENGTH_SHORT).show();
+
+            }
+        }
         //permissionGranted.checkAllMagicalCameraPermission();
         // l = app.getTestLocation();
         // update(l);
     }
+
 
     public void addNewLocation() {
         if (magicalCamera ==null) magicalCamera =  new MagicalCamera(this,permissionGranted);
@@ -203,10 +272,13 @@ public class ActivityLocation extends AppCompatActivity {
             ivSlika.setImageDrawable(this.getDrawable(R.drawable.tools));
         }
 
+
+
     }
 
 
     public void save() {
+
         MaterialBetterSpinner domSpinner = (MaterialBetterSpinner)findViewById(spinnerDom);
         l.setDom(domSpinner.getText().toString());
 
@@ -227,4 +299,8 @@ public class ActivityLocation extends AppCompatActivity {
         save();
         finish();
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 }

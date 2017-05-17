@@ -29,7 +29,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ActivityListMain">
+        <activity android:name=".RegisterActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,13 +37,13 @@
             </intent-filter>
         </activity>
 
-
         <service
             android:name=".GPSTracker"
             android:stopWithTask="true"
             android:exported="false"
             />
         <activity android:name=".ActivityMySettings"></activity>
+        <activity android:name=".ActivityListMain"></activity>
     </application>
 
 </manifest>

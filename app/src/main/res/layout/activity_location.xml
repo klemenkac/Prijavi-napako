@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context="com.example.kac.prijavinapako.ActivityLocation">
 
     <TextView
@@ -26,6 +27,8 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:hint="Izberi študentski dom"
+        android:textColor="@android:color/holo_red_dark"
+        android:textColorHint="@color/common_google_signin_btn_text_dark_disabled"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -36,12 +39,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Tip napake"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/txtSoba"
         android:layout_marginRight="7dp"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtSoba"
+        android:layout_marginTop="-1dp"
+        app:layout_constraintHorizontal_bias="0.0" />
 
     <TextView
         android:id="@+id/Soba"
@@ -93,23 +97,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Opis" />
 
-    <EditText
-        android:id="@+id/txtSoba"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="10dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Stevilka sobe"
-        app:layout_constraintLeft_toRightOf="@+id/Soba"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerDom" />
-
     <Button
         android:id="@+id/buttonSave"
         android:layout_width="0dp"
@@ -140,5 +127,18 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintRight_toRightOf="@+id/imageViewmain" />
+
+    <EditText
+        android:id="@+id/txtSoba"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:inputType="numberSigned"
+        app:layout_constraintLeft_toRightOf="@+id/Soba"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerDom" />
 
 </android.support.constraint.ConstraintLayout>
