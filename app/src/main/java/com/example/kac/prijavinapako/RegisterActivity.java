@@ -17,35 +17,39 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class RegisterActivity extends AppCompatActivity {
-    ApplicationMy app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        final EditText etAge = (EditText) findViewById(R.id.etAge);
-        final EditText etName = (EditText) findViewById(R.id.etName);
-        final EditText etUsername = (EditText) findViewById(R.id.etUsername);
-        final EditText etPassword = (EditText) findViewById(R.id.etPassword);
+
+        final EditText e_naslov = (EditText) findViewById(R.id.usernameUA);
+        final EditText sifra = (EditText) findViewById(R.id.sifra);
+        final EditText geslo1 = (EditText) findViewById(R.id.geslo1);
+        final EditText geslo2 = (EditText) findViewById(R.id.geslo2);
         final Button bRegister = (Button) findViewById(R.id.bRegister);
 
         bRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String name = etName.getText().toString();
-                final String username = etUsername.getText().toString();
-                final int age = Integer.parseInt(etAge.getText().toString());
-                final String password = etPassword.getText().toString();
+                final String e_naslovtx = e_naslov.getText().toString();
+                final int sifratx = Integer.parseInt(sifra.getText().toString());
+                final String geslo1tx = geslo1.getText().toString();
+                final String geslo2tx = geslo2.getText().toString();
 
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        if(geslo1tx.equals(geslo2tx)){
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             boolean success = jsonResponse.getBoolean("success");
                             if (success) {
-                                startActivity(new Intent(RegisterActivity.this,ActivityListMain.class));
+                                Toast.makeText(RegisterActivity.this, "Registracija uspela!" , Toast.LENGTH_SHORT).show();
+
+                                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                RegisterActivity.this.startActivity(intent);
                             } else {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
                                 builder.setMessage("Register Failed")
@@ -56,10 +60,14 @@ public class RegisterActivity extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        }else{
+                            Toast.makeText(RegisterActivity.this, "Gesli se ne ujemata!" , Toast.LENGTH_SHORT).show();
+
+                        }
                     }
                 };
 
-                RegisterRequest registerRequest = new RegisterRequest(name, username, age, password, responseListener);
+                RegisterRequest registerRequest = new RegisterRequest(e_naslovtx, sifratx, geslo1tx, responseListener);
                 RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
                 queue.add(registerRequest);
             }

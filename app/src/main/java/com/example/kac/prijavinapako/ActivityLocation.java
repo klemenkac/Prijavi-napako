@@ -18,14 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dropbox.client2.DropboxAPI;
-import com.dropbox.client2.ProgressListener;
-import com.dropbox.client2.android.AndroidAuthSession;
-import com.dropbox.client2.session.AccessTokenPair;
-import com.dropbox.client2.session.AppKeyPair;
-import com.dropbox.client2.session.Session;
-import com.dropbox.client2.session.Session.AccessType;
-import com.dropbox.client2.session.TokenPair;
 import com.example.DataAll;
 import com.example.Lokacija;
 import com.example.LokacijaTag;
@@ -50,14 +42,9 @@ import static com.example.kac.prijavinapako.R.id.spinnerTipNapake;
 
 public class ActivityLocation extends AppCompatActivity {
 
-    private DropboxAPI dropboxAPI;
+    // private DropboxAPI dropboxAPI;
     private boolean isUserLoggedIn;
 
-    private final static String DROPBOX_FILE_DIR="/DropboxDemo/";
-    private final static String DROPBOX_NAME="dropbox_prefs";
-    private final static String ACCESS_KEY="0ixgwcxhmqcx7gv";
-    private final static String ACCESS_SECRET="bjxdty6lfwlq323";
-    private  final static AccessType ACCESS_TYPE = AccessType.DROPBOX;
 
     ApplicationMy app;
     ImageView ivSlika;
@@ -79,7 +66,7 @@ public class ActivityLocation extends AppCompatActivity {
             , "Dom 14", "Dom 15"};
 
     String [] TIPLIST = {"Elektro","Oprema","Vodovod","Ogrevanje","Internet","Požarne naprave","Drugo"};
-    private DropboxAPI<AndroidAuthSession> mDBApi;
+
     //ELEKTRO: Žarnica, Vtičnica, Televizija, Drugo
     //OPREMA: Kuhinja, Kopalnica, Garderoba, WC, Soba, Drugo
     //VODOVOD: Kuhinja, Kopalnica, Kopalnica, Drugo
@@ -128,25 +115,7 @@ public class ActivityLocation extends AppCompatActivity {
 
         ID="";
 
-        AppKeyPair appKeyPair = new AppKeyPair(ACCESS_KEY, ACCESS_SECRET);
-        AndroidAuthSession session;
-
-        SharedPreferences prefs = getSharedPreferences(DROPBOX_NAME,0);
-        String key = prefs.getString(ACCESS_KEY,null);
-        String secret = prefs.getString(ACCESS_SECRET,null);
-
-        if(key != null && secret != null){
-            AccessTokenPair token = new AccessTokenPair(ACCESS_KEY,ACCESS_SECRET);
-            session=new AndroidAuthSession(appKeyPair,ACCESS_TYPE,token);
-
-        }
-        else{
-            session = new AndroidAuthSession(appKeyPair,ACCESS_TYPE);
-        }
-
-        dropboxAPI = new DropboxAPI(session);
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -207,23 +176,7 @@ public class ActivityLocation extends AppCompatActivity {
             System.out.println("Nič ni v extras!");
         }
 
-        AndroidAuthSession session = (AndroidAuthSession)dropboxAPI.getSession();
-        if(session.authenticationSuccessful()){
-            try{
-                session.finishAuthentication();
 
-                TokenPair tokens = session.getAccessTokenPair();
-                SharedPreferences prefs = getSharedPreferences(DROPBOX_NAME,0);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putString(ACCESS_KEY,tokens.key);
-                editor.putString(ACCESS_SECRET,tokens.secret);
-                editor.commit();
-
-            } catch(IllegalStateException e){
-                Toast.makeText(this,"Error", Toast.LENGTH_SHORT).show();
-
-            }
-        }
         //permissionGranted.checkAllMagicalCameraPermission();
         // l = app.getTestLocation();
         // update(l);
@@ -288,7 +241,7 @@ public class ActivityLocation extends AppCompatActivity {
         l.setOpis(edO.getText().toString());
 
         l.setSoba(edS.getText().toString());
-       // l.setDate(tvDatum.getText().toString());
+        // l.setDate(tvDatum.getText().toString());
         System.out.println("Po:"+l);
         app.save();
         Toast.makeText(this,"Napaka shranjena", Toast.LENGTH_SHORT).show();

@@ -24,11 +24,6 @@ public class ActivityMySettings extends AppCompatPreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //addPreferencesFromResource(R.xml.preferences); depricated
-//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-//            addPreferencesFromResource(R.xml.preferences); //TODO if this test and implement other logic like fragment has
-//        }else {
-           // PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
             getFragmentManager().beginTransaction().replace(android.R.id.content,  new PrefsFragment()).commit();
 //        }
 
@@ -98,9 +93,6 @@ public class ActivityMySettings extends AppCompatPreferenceActivity {
             setSummary(sharedPreferences,connectionPref,key);
             if (key.equals(LOCATION_INTERVAL_KEY)) {
                 EventBus.getDefault().post(new MessageEventSettingsLocationUpdateInterval(Integer.parseInt(sharedPreferences.getString(key,"1001"))));
-
-               // connectionPref.shouldCommit();
-               // getActivity().stopService(new Intent(getActivity(), GPSTracker.class));
             }
 
         }

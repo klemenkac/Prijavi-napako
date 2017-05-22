@@ -57,6 +57,7 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
         public TextView txtSoba;
         public TextView txtOpis;
         public TextView txtTip;
+        public TextView txtUser;
 
         public ImageView iv;
 
@@ -66,12 +67,11 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
             txtSoba = (TextView) v.findViewById(R.id.textViewSoba);
             txtOpis = (TextView) v.findViewById(R.id.textViewOpis);
             txtTip = (TextView) v.findViewById(R.id.textViewTip);
-
+            txtUser = (TextView) v.findViewById(R.id.textViewUser);
             txtFooter = (TextView) v.findViewById(R.id.secondLine);
             iv = (ImageView)v.findViewById(R.id.icon);
         }
     }
-
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -87,7 +87,6 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
         ac.startActivity(i);
 
     }
-
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
@@ -146,7 +145,7 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
         holder.txtSoba.setText(trenutni.getSoba());
         holder.txtOpis.setText(trenutni.getOpis());
         holder.txtTip.setText(trenutni.getTipNapake());
-
+        holder.txtUser.setText(trenutni.getIdUser());
     }
 
 

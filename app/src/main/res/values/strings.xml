@@ -10,5 +10,6 @@
     <string name="add_new_location_no_location">Za dodajanje mora biti pridobljena lokacija. Preverite pravice!</string>
     <string name="permission_must_title">Dodeljevanje pravic</string>
     <string name="permission_must">Za pravilno delovanje aplikacije so potrebne vse pravice. Dovoljenje za lokacijo je potrebno za pridobivanje lokacije odpadkov, dovoljenje dostopa do slik in shranjevanje je potrebno za dodajanje novih lokacij (slikanje).</string>
+    <string name="not_log_in">NOT SUCCESS</string>
 
 </resources>

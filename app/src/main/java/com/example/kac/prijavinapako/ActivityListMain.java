@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.location.Location;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -25,8 +26,18 @@ import android.view.View;
 
 import android.support.design.widget.Snackbar;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.DataAll;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.OptionalPendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -40,13 +51,14 @@ import org.greenrobot.eventbus.ThreadMode;
 import com.example.kac.prijavinapako.eventbus.MessageEventUpdateLocation;
 import java.util.List;
 
-public class ActivityListMain extends AppCompatActivity {
+public class ActivityListMain extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener  {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     ApplicationMy app;
     private FloatingActionButton fab;
     private Location mLocation;
+    private GoogleApiClient googleApiClient;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -125,12 +137,21 @@ public class ActivityListMain extends AppCompatActivity {
                     //                   Snackbar.make(view, getResources().getText(R.string.add_new_location_no_location), Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     Snackbar.make(view, getResources().getText(R.string.add_new_location_no_location), Snackbar.LENGTH_LONG).show();
                 }else {*/
-                    Intent i = new Intent(getBaseContext(), ActivityLocation.class);
-                    i.putExtra(DataAll.LOKACIJA_ID, ActivityLocation.NEW_LOCATION_ID);
-                    startActivity(i);
-               // }
+                Intent i = new Intent(getBaseContext(), ActivityLocation.class);
+                i.putExtra(DataAll.LOKACIJA_ID, ActivityLocation.NEW_LOCATION_ID);
+                startActivity(i);
+                // }
             }
         });
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
     }
 
     public void setDeleteOnSwipe(final RecyclerView mRecyclerView) {
@@ -183,7 +204,7 @@ public class ActivityListMain extends AppCompatActivity {
                 AlertDialog alert = builder.create();
                 alert.show();
                 Button nbutton = alert.getButton(DialogInterface.BUTTON_NEGATIVE);
-               // nbutton.setBackgroundColor(Color.BLUE);
+                // nbutton.setBackgroundColor(Color.BLUE);
                 nbutton.setTextColor(Color.BLUE);
 
                 Button nbutton2 = alert.getButton(DialogInterface.BUTTON_POSITIVE);
@@ -232,9 +253,66 @@ public class ActivityListMain extends AppCompatActivity {
         super.onStart();
         getPermissions();
 
+        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
+        if (opr.isDone()) {
+            GoogleSignInResult result = opr.get();
+            handleSignInResult(result);
+        } else {
+            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+                @Override
+                public void onResult(@NonNull GoogleSignInResult googleSignInResult) {
+                    handleSignInResult(googleSignInResult);
+                }
+            });
+        }
     }
 
+    private void handleSignInResult(GoogleSignInResult result) {
+        if (result.isSuccess()) {
 
+            GoogleSignInAccount account = result.getSignInAccount();
+            app.getAll().getUserMe().setIdUser(account.getDisplayName().toString());
+           /* nameTextView.setText(account.getDisplayName());
+            emailTextView.setText(account.getEmail());
+            idTextView.setText(account.getId());*/
+
+           // Glide.with(this).load(account.getPhotoUrl()).into(photoImageView);
+
+        } else {
+           // goLogInScreen();
+        }
+    }
+
+    private void goLogInScreen() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    public void logOut(View view) {
+        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
+            @Override
+            public void onResult(@NonNull Status status) {
+                if (status.isSuccess()) {
+                    goLogInScreen();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Napača", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+    public void revoke(View view) {
+        Auth.GoogleSignInApi.revokeAccess(googleApiClient).setResultCallback(new ResultCallback<Status>() {
+            @Override
+            public void onResult(@NonNull Status status) {
+                if (status.isSuccess()) {
+                    goLogInScreen();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Napaka", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -257,6 +335,11 @@ public class ActivityListMain extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        
     }
 }
 
