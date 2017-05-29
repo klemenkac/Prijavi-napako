@@ -1,14 +1,19 @@
 package com.example.kac.prijavinapako;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -18,14 +23,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.example.DataAll;
 import com.example.Lokacija;
 import com.example.LokacijaTag;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.frosquivel.magicalcamera.MagicalCamera;
@@ -33,8 +43,13 @@ import com.frosquivel.magicalcamera.Functionallities.PermissionGranted;
 import com.squareup.picasso.Picasso;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import static com.example.kac.prijavinapako.R.id.spinnerDom;
 import static com.example.kac.prijavinapako.R.id.spinnerTipNapake;
+import static com.example.kac.prijavinapako.R.id.txtOpis;
+import static com.example.kac.prijavinapako.R.id.txtSoba;
 
 /**
  * Created by xklem on 13. 03. 2017.
@@ -44,14 +59,14 @@ public class ActivityLocation extends AppCompatActivity {
 
     // private DropboxAPI dropboxAPI;
     private boolean isUserLoggedIn;
-
+    public String encodedImage;
 
     ApplicationMy app;
     ImageView ivSlika;
     EditText edS;
     EditText edO;
     TextView tvDatum;
-
+    String path;
     Button save;
     Lokacija l;
     LokacijaTag lt;
@@ -67,21 +82,14 @@ public class ActivityLocation extends AppCompatActivity {
 
     String [] TIPLIST = {"Elektro","Oprema","Vodovod","Ogrevanje","Internet","Požarne naprave","Drugo"};
 
-    //ELEKTRO: Žarnica, Vtičnica, Televizija, Drugo
-    //OPREMA: Kuhinja, Kopalnica, Garderoba, WC, Soba, Drugo
-    //VODOVOD: Kuhinja, Kopalnica, Kopalnica, Drugo
-    //OGREVANJE: Kuhinja, Kopalnica, Kopalnica, Drugo
-    //INTERNET: WIFI, Kabel, Oboje, Drugo
-    //POŽARNE NAPRAVE: Detektor alarma, Gasilni aparat, Drugo
-    //DRUGO: opiši, Drugo
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
 
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
+
+
 
         ArrayAdapter<String> arrayAdapterDom = new ArrayAdapter<String>(this,
                 android.R.layout.simple_dropdown_item_1line,DOMOVILIST);
@@ -96,7 +104,6 @@ public class ActivityLocation extends AppCompatActivity {
         app = (ApplicationMy) getApplication();
         ivSlika =(ImageView) findViewById(R.id.imageViewmain);
         edS = (EditText) findViewById(R.id.txtSoba);
-        //edT = (EditText) findViewById(R.id.txtTip);
         domSpinner.setHintTextColor(Color.BLUE);
         edO = (EditText) findViewById(R.id.txtOpis);
         tvDatum = (TextView) findViewById(R.id.datum);
@@ -104,7 +111,7 @@ public class ActivityLocation extends AppCompatActivity {
 
         permissionGranted = new PermissionGranted(this);
 
-        if (android.os.Build.VERSION.SDK_INT >= 24) {
+        if (android.os.Build.VERSION.SDK_INT >= 20) {
             permissionGranted.checkAllMagicalCameraPermission();
         }else{
             permissionGranted.checkCameraPermission();
@@ -120,7 +127,9 @@ public class ActivityLocation extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode,permissions,grantResults);
-        if (magicalCamera ==null)    magicalCamera =  new MagicalCamera(this,permissionGranted);
+        if (magicalCamera ==null){
+            magicalCamera =  new MagicalCamera(this,permissionGranted);
+        }
         //CALL THIS METHOD EVER IN THIS OVERRIDE FOR ACTIVATE PERMISSIONS
         magicalCamera.permissionGrant(requestCode, permissions, grantResults);
     }
@@ -129,29 +138,28 @@ public class ActivityLocation extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //CALL THIS METHOD EVER
+
+
         magicalCamera.resultPhoto(requestCode, resultCode, data);
 
-        //this is for rotate picture in this method
-        //magicalCamera.resultPhoto(requestCode, resultCode, data, MagicalCamera.ORIENTATION_ROTATE_180);
-
-        //with this form you obtain the bitmap (in this example set this bitmap in image view)
         ivSlika.setImageBitmap(magicalCamera.getPhoto());
 
-        //if you need save your bitmap in device use this method and return the path if you need this
-        //You need to send, the bitmap picture, the photo name, the directory name, the picture type, and autoincrement photo name if           //you need this send true, else you have the posibility or realize your standard name for your pictures.
-        String path = magicalCamera.savePhotoInMemoryDevice(magicalCamera.getPhoto(),"myPhotoName",  true);
-
+        path = magicalCamera.savePhotoInMemoryDevice(magicalCamera.getPhoto(),"myPhotoName",  true);
 
         if(path != null){
-            l = new Lokacija("Študentski dom ", "Soba", app.getAll().getUserMe().getIdUser(),System.currentTimeMillis(),"",path,"Tip napake");
+
+            Date cDate = new Date();
+            String datum = new SimpleDateFormat("dd. MM. yyyy").format(cDate);
+
+
+
+            l = new Lokacija("","Študentski dom ", "Soba", app.getAll().getUserMe().getIdUser(),datum,"",path,"Tip napake");
             update(l);
-            Toast.makeText(this, "The photo is save in device, please check this path: " + path, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "The photo is save in device, please check this path: " + path, Toast.LENGTH_SHORT).show();
         }else{
             Toast.makeText(this, "Sorry your photo dont write in devide, please contact with fabian7593@gmail and say this error", Toast.LENGTH_SHORT).show();
         }
     }
-
 
     void setLokacija(String ID) {
         l = app.getLocationByID(ID);
@@ -176,10 +184,6 @@ public class ActivityLocation extends AppCompatActivity {
             System.out.println("Nič ni v extras!");
         }
 
-
-        //permissionGranted.checkAllMagicalCameraPermission();
-        // l = app.getTestLocation();
-        // update(l);
     }
 
 
@@ -196,16 +200,22 @@ public class ActivityLocation extends AppCompatActivity {
         MaterialBetterSpinner domSpinner = (MaterialBetterSpinner)findViewById(spinnerDom);
         MaterialBetterSpinner tipSpinner = (MaterialBetterSpinner)findViewById(spinnerTipNapake);
 
+
+        tvDatum.setText(l.getDate());
         domSpinner.setText(l.getDom());
         tipSpinner.setText(l.getTipNapake());
 
         edS.setText(""+l.getSoba());
-        //tvDatum.setText(""+l.getDate());
-        tvDatum.setText(DataAll.dt.format(new Date(l.getDate())));
+
 
         edO.setText(l.getOpis());
 
         if (l.hasImage()) {
+
+           /* byte[] decodedString = Base64.decode(l.getFileName(), Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            ivSlika.setImageBitmap(decodedByte);*/
+
             System.out.println("Picasso: "+l.getFileName());
             File f = new File(l.getFileName()); //
             Picasso.with(ActivityLocation.this.getApplicationContext())
@@ -232,8 +242,11 @@ public class ActivityLocation extends AppCompatActivity {
 
     public void save() {
 
+
         MaterialBetterSpinner domSpinner = (MaterialBetterSpinner)findViewById(spinnerDom);
         l.setDom(domSpinner.getText().toString());
+
+
 
         MaterialBetterSpinner tipSpinner = (MaterialBetterSpinner)findViewById(spinnerTipNapake);
         l.setTipNapake(tipSpinner.getText().toString());
@@ -242,13 +255,108 @@ public class ActivityLocation extends AppCompatActivity {
 
         l.setSoba(edS.getText().toString());
         // l.setDate(tvDatum.getText().toString());
+
+
+        if(domSpinner.getText().toString()=="Študentski dom"){
+            Toast.makeText(this, "Neveljavni študentski dom!", Toast.LENGTH_SHORT).show();
+        }
+        else if(tipSpinner.getText().toString()=="Tip napake"){
+            Toast.makeText(this, "Neveljavni tip napake!", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            app.save();
+            Toast.makeText(this,"Napaka shranjena", Toast.LENGTH_SHORT).show();        }
         System.out.println("Po:"+l);
-        app.save();
-        Toast.makeText(this,"Napaka shranjena", Toast.LENGTH_SHORT).show();
     }
 
     public void onClickSaveMe(View v) {
-        if (stateNew) app.getAll().addLocation(l);
+
+        int a = l.getId().length();
+       // Toast.makeText(this,a + "", Toast.LENGTH_SHORT).show();
+        MaterialBetterSpinner domSpinner = (MaterialBetterSpinner)findViewById(spinnerDom);
+        MaterialBetterSpinner tipSpinner = (MaterialBetterSpinner)findViewById(spinnerTipNapake);
+        String ajdi = l.getId().toString();
+        String opis = edO.getText().toString();
+        String dom = domSpinner.getText().toString();
+        String soba = edS.getText().toString();
+        String tip_napake = tipSpinner.getText().toString();
+
+
+        Date cDate = new Date();
+        String datum = new SimpleDateFormat("dd. MM. yyyy").format(cDate);
+
+        if (stateNew){
+            l.setDate(datum);
+            app.getAll().addLocation(l);
+
+            Response.Listener<String> responseListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        boolean success = jsonResponse.getBoolean("success");
+
+                        if (!success) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(ActivityLocation.this);
+                            builder.setMessage("Napaka pri objavi napake na strežnik.")
+                                    .setNegativeButton("Retry", null)
+                                    .create()
+                                    .show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+           // Toast.makeText(this, app.getAll().getUserMe().getIdUser().toString(), Toast.LENGTH_SHORT).show();
+            String juzer=app.getAll().getUserMe().getIdUser().toString();
+
+
+            if(path!=null){
+
+
+
+              /*  Bitmap bm = BitmapFactory.decodeFile(path);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+                byte[] b = baos.toByteArray();
+
+                encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+*/
+            }
+
+            NapakaRequest napakaRequest = new NapakaRequest(ajdi, dom, soba, tip_napake, opis, juzer,"", responseListener);
+            RequestQueue queue = Volley.newRequestQueue(ActivityLocation.this);
+            queue.add(napakaRequest);
+        }
+
+
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    boolean success = jsonResponse.getBoolean("success");
+
+                    if (!success) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ActivityLocation.this);
+                        builder.setMessage("Napaka pri objavi napake na strežnik.")
+                                .setNegativeButton("Retry", null)
+                                .create()
+                                .show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        NapakaUpdateRequest napakaUpdateRequest = new NapakaUpdateRequest(ajdi, dom,soba,tip_napake,opis, responseListener);
+        RequestQueue queue = Volley.newRequestQueue(ActivityLocation.this);
+        queue.add(napakaUpdateRequest);
+
+        //Toast.makeText(this, l.getId().toString(), Toast.LENGTH_SHORT).show();
+
         save();
         finish();
     }

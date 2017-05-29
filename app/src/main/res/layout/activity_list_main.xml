@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|center_horizontal"
         android:onClick="logOut"
-        android:text="Logout"
+        android:text="odjava"
         app:layout_anchor="@+id/include"
         app:layout_anchorGravity="bottom|center_horizontal" />
 

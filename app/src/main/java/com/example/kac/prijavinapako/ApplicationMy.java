@@ -1,19 +1,34 @@
 package com.example.kac.prijavinapako;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.example.DataAll;
 import com.example.Lokacija;
 import com.example.TagList;
 
+import android.app.AlertDialog;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -33,18 +48,101 @@ public class ApplicationMy extends Application {
     private static final int SORT_BY_DOM=0;
     int sortType = SORT_BY_DATE;
 
+    ArrayAdapter<String> adapter;
+    String address="https://klemenkac.000webhostapp.com/GetNapaka.php";
+    InputStream is=null;
+    String line=null;
+    String result=null;
+    String[] data;
+
     private TagList tags;
     public static SharedPreferences preferences;
     private Location mLastLocation;
     @Override
     public void onCreate() {
+
         super.onCreate();
         tags = new TagList(); //also sets default tags
         EventBus.getDefault().register(this);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         mLastLocation=null;
-        if (!load())
-            all = DataAll.scenarijA();
+        StrictMode.setThreadPolicy((new StrictMode.ThreadPolicy.Builder().permitNetwork().build()));
+        getData();
+        /*
+        if (!load()){
+            StrictMode.setThreadPolicy((new StrictMode.ThreadPolicy.Builder().permitNetwork().build()));
+
+
+        }*/
+    }
+
+    private void getData() {
+        //Toast.makeText(getApplicationContext(), "Pridobivam podatke...", Toast.LENGTH_SHORT).show();
+
+        try{
+            URL url = new URL(address);
+            HttpURLConnection con =(HttpURLConnection) url.openConnection();
+
+            con.setRequestMethod("GET");
+
+            is=new BufferedInputStream(con.getInputStream());
+        }catch(Exception e){
+            Toast.makeText(getApplicationContext(), "Napaka1", Toast.LENGTH_SHORT).show();
+
+            e.printStackTrace();
+        }
+
+        try{
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            StringBuilder sb = new StringBuilder();
+
+            while((line=br.readLine()) != null){
+                sb.append(line+"\n");
+            }
+            is.close();
+            result=sb.toString();
+        }catch (Exception e){
+            Toast.makeText(getApplicationContext(), "Napaka2", Toast.LENGTH_SHORT).show();
+
+            e.printStackTrace();
+        }
+
+        //PARSE JSON DATA
+        try{
+            JSONArray ja = new JSONArray(result);
+            JSONObject jo = null;
+            String dataId;
+            String dataDom;
+            String dataSoba;
+            String dataOpis;
+            String dataUser;
+            String dataTip;
+            String dataSlika;
+            String dataDatum;
+
+            DataAll da = new DataAll();
+            Lokacija tmp;
+
+            for(int i=0;i<ja.length();i++){
+                jo=ja.getJSONObject(i);
+                dataId=jo.getString("id");
+                dataDom=jo.getString("dom");
+                dataSoba=jo.getString("soba");
+                dataOpis=jo.getString("opis");
+                dataUser=jo.getString("user");
+                dataTip=jo.getString("tip_napake");
+                dataDatum=jo.getString("datum");
+                //dataSlika=jo.getString("slika");
+
+                tmp = da.addLocation(dataId,dataDom, dataSoba,dataUser,dataDatum, dataOpis,null,dataTip);
+            }
+//            Toast.makeText(getApplicationContext(), data[0].toString(), Toast.LENGTH_SHORT).show();
+            all = da;
+        }catch (Exception e){
+            Toast.makeText(getApplicationContext(), "Napaka3", Toast.LENGTH_SHORT).show();
+
+            e.printStackTrace();
+        }
     }
 
     @Subscribe
@@ -109,7 +207,32 @@ public class ApplicationMy extends Application {
     }
 
     public void removeLocationByPosition(int adapterPosition) {
-        all.getLokacijaAll().remove(adapterPosition);
+
+        String ajdi=all.getLokacijaAll().get(adapterPosition).getId().toString();
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    boolean success = jsonResponse.getBoolean("success");
+
+                    if (!success) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ApplicationMy.this);
+                        builder.setMessage("Napaka pri delete napake na strežnik.")
+                                .setNegativeButton("Retry", null)
+                                .create()
+                                .show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        DeleteRequest deleteRequest = new DeleteRequest(ajdi, responseListener);
+        RequestQueue queue = Volley.newRequestQueue(ApplicationMy.this);
+        queue.add(deleteRequest);
+       all.getLokacijaAll().remove(adapterPosition);
     }
 
     public void sortUpdate() {
@@ -121,7 +244,8 @@ public class ApplicationMy extends Application {
                     @Override
                     public int compare(Lokacija l1, Lokacija l2) {
                         if (l1.getDate()==l2.getDate()) return 0;
-                        if (l1.getDate()>l2.getDate()) return -1;
+
+                        if (l1.getDate().compareTo(l2.getDate()) > 0) return -1;
                         return 1;
                     }
                 });

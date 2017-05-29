@@ -42,7 +42,8 @@ public class ApplicationJson {
 
 
     public static boolean save(DataAll a, File file) {
-        if (isExternalStorageWritable()) {
+        return true;
+        /*if (isExternalStorageWritable()) {
             try {
                 long start = System.currentTimeMillis();
                 System.out.println("Save "+file.getAbsolutePath()+" "+file.getName());
@@ -63,11 +64,11 @@ public class ApplicationJson {
         } else{
             System.out.println(file.getAbsolutePath()+" NOT Writable");
         }
-        return false;
+        return false;*/
     }
 
     public static DataAll load(File file) {
-        if (isExternalStorageReadable()) {
+        /*if (isExternalStorageReadable()) {
             try {
                 System.out.println("Load "+file.getAbsolutePath()+" "+file.getName());
                 FileInputStream fstream = new FileInputStream(file);
@@ -85,6 +86,7 @@ public class ApplicationJson {
                 System.out.println("Error load "+e.toString());
             }}
         System.out.println("ExternalStorageAvailable is not avaliable");
-        return null;}
-
+        return null;}*/
+        return null;
+    }
 }

@@ -2,9 +2,12 @@ package com.example.kac.prijavinapako;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,12 +36,6 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
             last = l;
             notifyDataSetChanged();
         }
-        else {
-          /*  if (Util.distance(last.getLatitude(),last.getLongitude(),l.getLatitude(),l.getLongitude())>UPDATE_DISTANCE_IF_DIFF_IN_M){
-                last = l;
-                notifyDataSetChanged();
-            }*/
-        }
     }
 
     public AdapterLokacija(DataAll all, Activity ac) {
@@ -46,8 +43,6 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
         this.all = all;
         this.ac = ac;
     }
-
-
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
@@ -58,7 +53,7 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
         public TextView txtOpis;
         public TextView txtTip;
         public TextView txtUser;
-
+        public TextView txtDatum;
         public ImageView iv;
 
         public ViewHolder(View v) {
@@ -69,6 +64,7 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
             txtTip = (TextView) v.findViewById(R.id.textViewTip);
             txtUser = (TextView) v.findViewById(R.id.textViewUser);
             txtFooter = (TextView) v.findViewById(R.id.secondLine);
+            txtDatum = (TextView) v.findViewById(R.id.textViewDatum);
             iv = (ImageView)v.findViewById(R.id.icon);
         }
     }
@@ -96,6 +92,7 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
         //holder.txtHeader.setText(trenutni.getIdUser());
 
         if (trenutni.hasImage()) {
+
             File f = new File(trenutni.getFileName()); //
             Picasso.with(ac.getApplicationContext())
                     .load(f) //URL
@@ -113,6 +110,11 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
         else {
             holder.iv.setImageDrawable(this.ac.getDrawable(R.drawable.tools));
         }
+
+
+       /* byte[] decodedString = Base64.decode(trenutni.getFileName(), Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        holder.iv.setImageBitmap(decodedByte);*/
 
         if (position%2==1) {
             holder.txtOpis.setTextColor(Color.BLUE);
@@ -132,12 +134,6 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
             }
         });
 
-/*        holder.txtFooter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AdapterLokacija.startDView(trenutni.getId(),ac);
-            }
-        });*/
 
 
 //        holder.txtFooter.setText(trenutni.getDom()+", Soba: "+soba);
@@ -146,6 +142,7 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
         holder.txtOpis.setText(trenutni.getOpis());
         holder.txtTip.setText(trenutni.getTipNapake());
         holder.txtUser.setText(trenutni.getIdUser());
+        holder.txtDatum.setText(trenutni.getDate());
     }
 
 

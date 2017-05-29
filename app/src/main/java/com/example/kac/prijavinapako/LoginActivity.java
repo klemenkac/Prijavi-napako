@@ -29,11 +29,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private SignInButton signInButton;
     public static final int SIGN_IN_CODE = 777;
     ApplicationMy app;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         app = (ApplicationMy) getApplication();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        //Toast.makeText(this, "HERE", Toast.LENGTH_SHORT).show();
+
 
         final EditText etUsername = (EditText) findViewById(R.id.etUsername);
         final EditText etPassword = (EditText) findViewById(R.id.etPassword);
@@ -133,7 +137,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
              goMainScreen();
         }else{
             Toast.makeText(this, R.string.not_log_in , Toast.LENGTH_SHORT).show();
-
         }
     }
 

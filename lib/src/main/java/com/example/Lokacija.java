@@ -14,11 +14,15 @@ public class Lokacija {
     String fileName;
     String opis;
     String tipNapake;
-    long date;
+    String date;
     public static final String NODATA="_NA";
 
-    public Lokacija(String dom, String soba, String idUser, long date, String opis, String fileName, String tipNapake) {
-        this.id = UUID.randomUUID().toString().replaceAll("-", "");
+    public Lokacija(String id, String dom, String soba, String idUser, String date, String opis, String fileName, String tipNapake) {
+        if(id==""){
+            this.id = UUID.randomUUID().toString().replaceAll("-", "");
+        }else{
+            this.id=id;
+        }
         this.dom = dom;
         this.soba = soba;
         this.idUser = idUser;
@@ -97,11 +101,11 @@ public class Lokacija {
         this.idUser = idUser;
     }
 
-    public long getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(long date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

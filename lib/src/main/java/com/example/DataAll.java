@@ -1,11 +1,15 @@
 package com.example;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.swing.text.html.HTML;
+
+import sun.net.www.http.HttpClient;
 
 /**
  * Created by xklem on 13. 03. 2017.
@@ -13,7 +17,6 @@ import javax.swing.text.html.HTML;
 
 public class DataAll {
     public static final String LOKACIJA_ID = "lokacija_idXX";
-    public static SimpleDateFormat dt = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
     //http://stackoverflow.com/questions/4772425/change-date-format-in-a-java-string
     private TagList tags;
     private User userMe;
@@ -28,17 +31,17 @@ public class DataAll {
     }
     public void addLocation(Lokacija l) {
         lokacijaList.add(l);
-
     }
 
-    public Lokacija addLocation(String dom, String soba, String idUser, String opis, String im, String tipNapake) {
-        if (im==null) im=Lokacija.NODATA;
-        else
-         if (im.trim().length()==0) im = Lokacija.NODATA;
-        Lokacija tmp = new Lokacija(dom, soba, userMe.getIdUser(),System.currentTimeMillis(), opis, im, tipNapake);
+    public Lokacija addLocation(String id,String dom, String soba, String idUser,String datum, String opis, String im, String tipNapake) {
+
+       /* Date myDate = new Date();
+        String datum = new SimpleDateFormat("dd. MM. YYYY").format(myDate);*/
+
+        Lokacija tmp = new Lokacija(id, dom, soba, idUser, datum, opis, im, tipNapake);
         lokacijaList.add(tmp);
         return tmp;
-
+//hello
     }
 
     public User getUserMe() {
@@ -66,23 +69,35 @@ public class DataAll {
                 ", \nlokacijaTagList=" + lokacijaTagList +
                 '}';
     }
-    //   public Lokacija(String name, long x, long y, String idUser, String fileName, long date) {
-    public static DataAll scenarijA() {
+
+   /* public static DataAll scenarijB(String dom){
+
+    }*/
+
+    public static DataAll scenarijA(String dom) {
         DataAll da = new DataAll();
         Date danes = new Date();
         da.userMe = new User("xklemenx@gmail.com","Klemen Andrejc Kac");
         Lokacija tmp;
-        tmp = da.addLocation("Studentski dom 13", "252","","Potrebna zamenjava zarnice na stropu sobe.","","");
 
-        tmp = da.addLocation("Studentski dom 6", "142","","Pokvarjena pipa v kuhinji.","","");
 
-        tmp = da.addLocation("Studentski dom 2", "425C","","Zarnica v kopalnici nad ogledalom ne dela.","","");
+        //tmp = da.addLocation(dom, "252","Janez novak","Potrebna zamenjava zarnice na stropu sobe.","","");
+/*
+        tmp = da.addLocation(dom, "252","Janez novak","Potrebna zamenjava zarnice na stropu sobe.","","");
 
-        for (int i=0; i<3; i++){
+        tmp = da.addLocation("Dom 13", "252","Janez novak","Potrebna zamenjava zarnice na stropu sobe.","","");
+
+        tmp = da.addLocation("Dom 6", "142","Klemen Kac","Pokvarjena pipa v kuhinji.","","");
+
+        tmp = da.addLocation("Dom 2", "425","Miha Zupan","Zarnica v kopalnici nad ogledalom ne dela.","","");*/
+
+        /*for (int i=0; i<3; i++){
             tmp = da.addLocation("Studentski dom 2", "425C","","Zarnica v kopalnici nad ogledalom ne dela.","","");
-        }
+        }*/
         return da;
     }
+
+
 
     public void addLokacija(Lokacija l) {
         lokacijaList.add(l);
@@ -128,8 +143,6 @@ public class DataAll {
                 lokacijaTagList.remove(i);
         }
     }
-
-    //    public LokacijaTag(String idLokacija, String tagID, long datum, String idUser) {
 
     public ArrayList<LokacijaTag> getDefultTagLists(ArrayList<Tag> tags, Lokacija l) {
         ArrayList<LokacijaTag> lt = new ArrayList<>();

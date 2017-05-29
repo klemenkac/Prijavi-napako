@@ -8,12 +8,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NapakaRequest extends StringRequest {
-    private static final String REGISTER_REQUEST_URL = "https://klemenkac.000webhostapp.com/Napaka.php";
+public class NapakaUpdateRequest extends StringRequest {
+    private static final String REQUEST_URL = "https://klemenkac.000webhostapp.com/UpdateNapaka.php";
     private Map<String, String> params;
 
-    public NapakaRequest(String id, String dom, String soba, String tip_napake, String opis, String user, String slika, Response.Listener<String> listener) {
-        super(Method.POST, REGISTER_REQUEST_URL, listener, null);
+    public NapakaUpdateRequest(String id,String dom,String soba,String tip_napake, String opis, Response.Listener<String> listener) {
+        super(Method.POST, REQUEST_URL, listener, null);
 
         Date cDate = new Date();
         String datum = new SimpleDateFormat("dd. MM. yyyy").format(cDate);
@@ -24,8 +24,6 @@ public class NapakaRequest extends StringRequest {
         params.put("soba", soba);
         params.put("tip_napake", tip_napake);
         params.put("opis", opis);
-        params.put("user", user);
-        params.put("slika", slika);
         params.put("datum", datum);
     }
 

@@ -86,14 +86,6 @@ public class ActivityListMain extends AppCompatActivity implements GoogleApiClie
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(MessageEventUpdateLocation event) {
-        Log.i("ActivityZacetna","MessageEventUpdateLocation ");
-        mLocation = event.getM();
-        //mAdapter.setLastLocation(mLocation);
-        fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,12 +123,7 @@ public class ActivityListMain extends AppCompatActivity implements GoogleApiClie
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //  Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                //         .setAction("Action", null).show();
-              /*  if (mLocation==null) {
-                    //                   Snackbar.make(view, getResources().getText(R.string.add_new_location_no_location), Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                    Snackbar.make(view, getResources().getText(R.string.add_new_location_no_location), Snackbar.LENGTH_LONG).show();
-                }else {*/
+
                 Intent i = new Intent(getBaseContext(), ActivityLocation.class);
                 i.putExtra(DataAll.LOKACIJA_ID, ActivityLocation.NEW_LOCATION_ID);
                 startActivity(i);
@@ -188,12 +175,6 @@ public class ActivityListMain extends AppCompatActivity implements GoogleApiClie
                         .setNegativeButton("Ne", dialogClickListener)
                 ;
 
-
-                /*builder.setMessage("Are you sure?");
-
-                builder.setPositiveButton("Yes", dialogClickListener);
-                builder.setNegativeButton("No", dialogClickListener);
-*/
                 builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialogInterface) {
@@ -296,7 +277,6 @@ public class ActivityListMain extends AppCompatActivity implements GoogleApiClie
                 if (status.isSuccess()) {
                     goLogInScreen();
                 } else {
-                    Toast.makeText(getApplicationContext(), "Napača", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -329,7 +309,6 @@ public class ActivityListMain extends AppCompatActivity implements GoogleApiClie
     protected void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
-        // stopService(new Intent(ActivityZacetna.this, GPSTracker.class));
     }
 
     @Override

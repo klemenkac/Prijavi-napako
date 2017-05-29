@@ -9,7 +9,7 @@ public class MyMain {
         System.out.println("Prijavi Napako!");
         Tag a = new Tag("Elektro");
         TagList l = new TagList();
-        DataAll dataAll = DataAll.scenarijA();
+        DataAll dataAll = DataAll.scenarijA("");
         System.out.println(dataAll);
     }
 }
