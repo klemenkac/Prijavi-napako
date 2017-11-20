@@ -38,6 +38,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.firebase.auth.FirebaseAuth;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -51,14 +52,16 @@ import org.greenrobot.eventbus.ThreadMode;
 import com.example.kac.prijavinapako.eventbus.MessageEventUpdateLocation;
 import java.util.List;
 
-public class ActivityListMain extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener  {
+public class ActivityListMain extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     ApplicationMy app;
     private FloatingActionButton fab;
-    private Location mLocation;
-    private GoogleApiClient googleApiClient;
+
+    private Button mLogOutBtn;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -109,6 +112,24 @@ public class ActivityListMain extends AppCompatActivity implements GoogleApiClie
         mRecyclerView.setAdapter(mAdapter);
         // setSpinner();
 
+        mAuth=FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if(firebaseAuth.getCurrentUser()==null){
+                    startActivity(new Intent(ActivityListMain.this,LoginActivity.class));
+                }
+            }
+        };
+
+        mLogOutBtn = (Button) findViewById(R.id.log_out);
+
+        mLogOutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAuth.signOut();
+            }
+        });
       /*  Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);*/
 
@@ -116,7 +137,6 @@ public class ActivityListMain extends AppCompatActivity implements GoogleApiClie
         setDeleteOnSwipe(mRecyclerView);
 
 
-        mLocation=null;
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setBackgroundColor(getResources().getColor(R.color.colorGray));
         //fab.set
@@ -131,14 +151,7 @@ public class ActivityListMain extends AppCompatActivity implements GoogleApiClie
             }
         });
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
 
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
     }
 
     public void setDeleteOnSwipe(final RecyclerView mRecyclerView) {
@@ -234,18 +247,7 @@ public class ActivityListMain extends AppCompatActivity implements GoogleApiClie
         super.onStart();
         getPermissions();
 
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
-        if (opr.isDone()) {
-            GoogleSignInResult result = opr.get();
-            handleSignInResult(result);
-        } else {
-            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-                @Override
-                public void onResult(@NonNull GoogleSignInResult googleSignInResult) {
-                    handleSignInResult(googleSignInResult);
-                }
-            });
-        }
+        mAuth.addAuthStateListener(mAuthListener);
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
@@ -270,29 +272,7 @@ public class ActivityListMain extends AppCompatActivity implements GoogleApiClie
         startActivity(intent);
     }
 
-    public void logOut(View view) {
-        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
-            @Override
-            public void onResult(@NonNull Status status) {
-                if (status.isSuccess()) {
-                    goLogInScreen();
-                } else {
-                }
-            }
-        });
-    }
-    public void revoke(View view) {
-        Auth.GoogleSignInApi.revokeAccess(googleApiClient).setResultCallback(new ResultCallback<Status>() {
-            @Override
-            public void onResult(@NonNull Status status) {
-                if (status.isSuccess()) {
-                    goLogInScreen();
-                } else {
-                    Toast.makeText(getApplicationContext(), "Napaka", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -316,9 +296,5 @@ public class ActivityListMain extends AppCompatActivity implements GoogleApiClie
         super.onDestroy();
     }
 
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        
-    }
 }
 
