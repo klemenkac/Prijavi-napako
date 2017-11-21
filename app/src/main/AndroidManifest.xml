@@ -22,18 +22,25 @@
         android:roundIcon="@drawable/icon1"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity">
+        <activity android:name=".SplashActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ActivityMySettings"></activity>
-        <activity android:name=".ActivityListMain"></activity>
-        <activity android:name=".RegisterActivity"></activity>
-        <activity android:name=".UserAreaActivity"></activity>
-        <activity android:name=".ActivityLocation"></activity>
+        <activity android:name=".ActivityMySettings"/>
+        <activity android:name=".ActivityListMain"/>
+        <activity android:name=".LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".RegisterActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".UserAreaActivity"/>
+        <activity android:name=".ActivityLocation"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan|adjustResize"/>
 
 
     </application>

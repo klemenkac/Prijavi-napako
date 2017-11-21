@@ -7,6 +7,7 @@ package com.example;
 public class User {
     private String idUser;
     private String ime_priimek;
+    //private String nacinVpisa;
 
     public User(String idUser, String vzdevek) {
         this.idUser = idUser;

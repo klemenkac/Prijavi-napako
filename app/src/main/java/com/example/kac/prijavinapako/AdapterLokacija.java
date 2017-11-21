@@ -63,7 +63,7 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
             txtOpis = (TextView) v.findViewById(R.id.textViewOpis);
             txtTip = (TextView) v.findViewById(R.id.textViewTip);
             txtUser = (TextView) v.findViewById(R.id.textViewUser);
-            txtFooter = (TextView) v.findViewById(R.id.secondLine);
+           // txtFooter = (TextView) v.findViewById(R.id.secondLine);
             txtDatum = (TextView) v.findViewById(R.id.textViewDatum);
             iv = (ImageView)v.findViewById(R.id.icon);
         }

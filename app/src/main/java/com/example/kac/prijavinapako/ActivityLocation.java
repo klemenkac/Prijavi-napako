@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -74,6 +75,7 @@ public class ActivityLocation extends AppCompatActivity {
     PermissionGranted permissionGranted;
     MagicalCamera magicalCamera;
     boolean stateNew;
+    private int RESIZE_PHOTO_PIXELS_PERCENTAGE = 10;
     public static String NEW_LOCATION_ID="NEW_LOCATION";
 
     String [] DOMOVILIST = {"Dom 1", "Dom 2", "Dom 3", "Dom 4", "Dom 5", "Dom 6",
@@ -84,12 +86,8 @@ public class ActivityLocation extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
-
-
 
         ArrayAdapter<String> arrayAdapterDom = new ArrayAdapter<String>(this,
                 android.R.layout.simple_dropdown_item_1line,DOMOVILIST);
@@ -128,7 +126,7 @@ public class ActivityLocation extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode,permissions,grantResults);
         if (magicalCamera ==null){
-            magicalCamera =  new MagicalCamera(this,permissionGranted);
+            magicalCamera =  new MagicalCamera(this,RESIZE_PHOTO_PIXELS_PERCENTAGE,permissionGranted);
         }
         //CALL THIS METHOD EVER IN THIS OVERRIDE FOR ACTIVATE PERMISSIONS
         magicalCamera.permissionGrant(requestCode, permissions, grantResults);
@@ -188,7 +186,7 @@ public class ActivityLocation extends AppCompatActivity {
 
 
     public void addNewLocation() {
-        if (magicalCamera ==null) magicalCamera =  new MagicalCamera(this,permissionGranted);
+        if (magicalCamera ==null) magicalCamera =  new MagicalCamera(this,RESIZE_PHOTO_PIXELS_PERCENTAGE,permissionGranted);
         System.out.println("Klik Save magicalCamera1 method");
         magicalCamera.takePhoto();
         System.out.println("Klik Save magicalCamera2 method");

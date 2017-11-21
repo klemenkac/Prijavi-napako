@@ -5,8 +5,10 @@ package com.example.kac.prijavinapako;
  */
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.location.Location;
@@ -25,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import android.support.design.widget.Snackbar;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -38,7 +41,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.firebase.auth.FirebaseAuth;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -52,16 +54,13 @@ import org.greenrobot.eventbus.ThreadMode;
 import com.example.kac.prijavinapako.eventbus.MessageEventUpdateLocation;
 import java.util.List;
 
-public class ActivityListMain extends AppCompatActivity {
+public class ActivityListMain extends AppCompatActivity  {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     ApplicationMy app;
     private FloatingActionButton fab;
-
-    private Button mLogOutBtn;
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+    private GoogleApiClient googleApiClient;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -93,6 +92,7 @@ public class ActivityListMain extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         app = (ApplicationMy) getApplication();
         setContentView(R.layout.activity_list_main);
 
@@ -112,26 +112,6 @@ public class ActivityListMain extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
         // setSpinner();
 
-        mAuth=FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if(firebaseAuth.getCurrentUser()==null){
-                    startActivity(new Intent(ActivityListMain.this,LoginActivity.class));
-                }
-            }
-        };
-
-        mLogOutBtn = (Button) findViewById(R.id.log_out);
-
-        mLogOutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAuth.signOut();
-            }
-        });
-      /*  Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);*/
 
         //TODO Show V7
         setDeleteOnSwipe(mRecyclerView);
@@ -151,7 +131,19 @@ public class ActivityListMain extends AppCompatActivity {
             }
         });
 
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
 
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        Toast.makeText(ActivityListMain.this, "Nekaj je šlo narobe." , Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
     }
 
     public void setDeleteOnSwipe(final RecyclerView mRecyclerView) {
@@ -198,11 +190,9 @@ public class ActivityListMain extends AppCompatActivity {
                 AlertDialog alert = builder.create();
                 alert.show();
                 Button nbutton = alert.getButton(DialogInterface.BUTTON_NEGATIVE);
-                // nbutton.setBackgroundColor(Color.BLUE);
                 nbutton.setTextColor(Color.BLUE);
 
                 Button nbutton2 = alert.getButton(DialogInterface.BUTTON_POSITIVE);
-                //nbutton2.setBackgroundColor(Color.MAGENTA);
                 nbutton2.setTextColor(Color.MAGENTA);
             }
         };
@@ -247,32 +237,49 @@ public class ActivityListMain extends AppCompatActivity {
         super.onStart();
         getPermissions();
 
-        mAuth.addAuthStateListener(mAuthListener);
+        SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
+
+        String ime=sharedpreferences.getString("name",null);
+        Toast.makeText(getApplicationContext(), "Pozdravljen "+ime, Toast.LENGTH_SHORT).show();
+
     }
 
-    private void handleSignInResult(GoogleSignInResult result) {
-        if (result.isSuccess()) {
 
-            GoogleSignInAccount account = result.getSignInAccount();
-            app.getAll().getUserMe().setIdUser(account.getDisplayName().toString());
-           /* nameTextView.setText(account.getDisplayName());
-            emailTextView.setText(account.getEmail());
-            idTextView.setText(account.getId());*/
-
-           // Glide.with(this).load(account.getPhotoUrl()).into(photoImageView);
-
-        } else {
-           // goLogInScreen();
-        }
-    }
 
     private void goLogInScreen() {
+        SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString("name", "");
+        editor.commit();
+
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
-
+    public void logOut(View view) {
+        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
+            @Override
+            public void onResult(@NonNull Status status) {
+                if (status.isSuccess()) {
+                    goLogInScreen();
+                } else {
+                }
+            }
+        });
+    }
+    public void revoke(View view) {
+        Auth.GoogleSignInApi.revokeAccess(googleApiClient).setResultCallback(new ResultCallback<Status>() {
+            @Override
+            public void onResult(@NonNull Status status) {
+                if (status.isSuccess()) {
+                    goLogInScreen();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Napaka", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -297,4 +304,3 @@ public class ActivityListMain extends AppCompatActivity {
     }
 
 }
-
