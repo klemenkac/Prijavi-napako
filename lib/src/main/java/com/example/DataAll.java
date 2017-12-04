@@ -24,7 +24,7 @@ public class DataAll {
     private ArrayList<LokacijaTag> lokacijaTagList;
 
     public DataAll() {
-        userMe = new User("neznani.nedolocen@nekje.ne","NiDefiniran");
+        userMe = new User("neznani@nekje.ne","NiDefiniran");
 
         lokacijaList = new ArrayList<>();
         lokacijaTagList = new ArrayList<>();
@@ -34,14 +34,9 @@ public class DataAll {
     }
 
     public Lokacija addLocation(String id,String dom, String soba, String idUser,String datum, String opis, String im, String tipNapake) {
-
-       /* Date myDate = new Date();
-        String datum = new SimpleDateFormat("dd. MM. YYYY").format(myDate);*/
-
         Lokacija tmp = new Lokacija(id, dom, soba, idUser, datum, opis, im, tipNapake);
         lokacijaList.add(tmp);
         return tmp;
-//hello
     }
 
     public User getUserMe() {

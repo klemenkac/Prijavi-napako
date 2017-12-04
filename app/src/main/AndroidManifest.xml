@@ -24,17 +24,17 @@
         android:theme="@style/AppTheme">
         <activity android:name=".SplashActivity"
             android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ActivityMySettings"/>
-        <activity android:name=".ActivityListMain"/>
         <activity android:name=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".ActivityMySettings"/>
+        <activity android:name=".ActivityListMain"/>
         <activity android:name=".RegisterActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".UserAreaActivity"/>

@@ -5,6 +5,7 @@
     <string name="mapa">Mapa</string>
     <string name="title_activity_main_brisi2">MainActivityBrisi2</string>
     <string name="action_settings">Nastavitve</string>
+    <string name="action_odjava">Odjava</string>
     <string name="action_sort">Uredi</string>
     <string name="title_activity_settings">Settings</string>
     <string name="add_new_location_no_location">Za dodajanje mora biti pridobljena lokacija. Preverite pravice!</string>

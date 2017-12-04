@@ -210,24 +210,25 @@ public class ActivityLocation extends AppCompatActivity {
 
         if (l.hasImage()) {
 
-           /* byte[] decodedString = Base64.decode(l.getFileName(), Base64.DEFAULT);
-            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            ivSlika.setImageBitmap(decodedByte);*/
+            if(l.getFileName().length()>100){
+                byte[] decodedString = Base64.decode(l.getFileName(), Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                ivSlika.setImageBitmap(decodedByte);
+            }else{
+                System.out.println("Picasso: "+l.getFileName());
+                File f = new File(l.getFileName()); //
+                Picasso.with(ActivityLocation.this.getApplicationContext())
+                        .load(f) //URL
+                        .placeholder(R.drawable.ic_cloud_download_black_124dp)
+                        .error(R.drawable.ic_error_black_124dp)
+                        // To fit image into imageView
+                        .fit()
+                        // To prevent fade animation
+                        .noFade()
+                        .into(ivSlika);
+            }
 
-            System.out.println("Picasso: "+l.getFileName());
-            File f = new File(l.getFileName()); //
-            Picasso.with(ActivityLocation.this.getApplicationContext())
-                    .load(f) //URL
-                    .placeholder(R.drawable.ic_cloud_download_black_124dp)
-                    .error(R.drawable.ic_error_black_124dp)
-                    // To fit image into imageView
-                    .fit()
-                    // To prevent fade animation
-                    .noFade()
-                    .into(ivSlika);
 
-            //   Picasso.with(ac).load(trenutni.getFileName()).into(holder.iv);
-            // holder.iv.setImageDrawable(this.ac.getDrawable(R.drawable.ic_airline_seat_recline_extra_black_24dp));
         }
         else {
             ivSlika.setImageDrawable(this.getDrawable(R.drawable.tools));
@@ -252,6 +253,19 @@ public class ActivityLocation extends AppCompatActivity {
         l.setOpis(edO.getText().toString());
 
         l.setSoba(edS.getText().toString());
+
+        SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
+        String ime=sharedpreferences.getString("name",null);
+        l.setIdUser(ime);
+
+        Bitmap bm = BitmapFactory.decodeFile(path);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+        byte[] b = baos.toByteArray();
+
+        encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+
+        l.setFileName(encodedImage);
         // l.setDate(tvDatum.getText().toString());
 
 
@@ -307,23 +321,24 @@ public class ActivityLocation extends AppCompatActivity {
                 }
             };
            // Toast.makeText(this, app.getAll().getUserMe().getIdUser().toString(), Toast.LENGTH_SHORT).show();
-            String juzer=app.getAll().getUserMe().getIdUser().toString();
+            SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
+            String juzer=sharedpreferences.getString("name",null);
 
 
             if(path!=null){
 
 
 
-              /*  Bitmap bm = BitmapFactory.decodeFile(path);
+                Bitmap bm = BitmapFactory.decodeFile(path);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
                 byte[] b = baos.toByteArray();
 
                 encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
-*/
+
             }
 
-            NapakaRequest napakaRequest = new NapakaRequest(ajdi, dom, soba, tip_napake, opis, juzer,"", responseListener);
+            NapakaRequest napakaRequest = new NapakaRequest(ajdi, dom, soba, tip_napake, opis, juzer,encodedImage, responseListener);
             RequestQueue queue = Volley.newRequestQueue(ActivityLocation.this);
             queue.add(napakaRequest);
         }
