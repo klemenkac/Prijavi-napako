@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "891791148157",
-    "firebase_url": "https://prijavi-napako-7dba3.firebaseio.com",
-    "project_id": "prijavi-napako-7dba3",
-    "storage_bucket": "prijavi-napako-7dba3.appspot.com"
+    "project_number": "604357741415",
+    "firebase_url": "https://prijavi-napako-9136e.firebaseio.com",
+    "project_id": "prijavi-napako-9136e",
+    "storage_bucket": "prijavi-napako-9136e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:891791148157:android:4309871101eb2ce7",
+        "mobilesdk_app_id": "1:604357741415:android:4309871101eb2ce7",
         "android_client_info": {
           "package_name": "com.example.kac.prijavinapako"
         }
       },
       "oauth_client": [
         {
-          "client_id": "891791148157-j55ep3lhusr5645un91tubvf7s37v2tf.apps.googleusercontent.com",
+          "client_id": "604357741415-lq1lcmb5iqkuqa7btj4e1e5a2okirq1k.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.kac.prijavinapako",
@@ -23,13 +23,13 @@
           }
         },
         {
-          "client_id": "891791148157-fetm3p3au09m5khoukn3fch58gal26ku.apps.googleusercontent.com",
+          "client_id": "604357741415-n4k8dafp43o48t805it17mobks0f52ur.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB1s8T03q6uZXBQVnZpOh1e6Iyx8oO3GNE"
+          "current_key": "AIzaSyAc29taIcQxfC36nu_BRIPA2m0wTLg4IgU"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "891791148157-fetm3p3au09m5khoukn3fch58gal26ku.apps.googleusercontent.com",
+              "client_id": "604357741415-n4k8dafp43o48t805it17mobks0f52ur.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

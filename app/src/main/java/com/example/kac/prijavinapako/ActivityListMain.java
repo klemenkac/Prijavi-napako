@@ -68,7 +68,6 @@ public class ActivityListMain extends AppCompatActivity  {
         return true;
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -81,18 +80,6 @@ public class ActivityListMain extends AppCompatActivity  {
                 //app.sortUpdate();
                 app.sortChangeAndUpdate();
                 mAdapter.notifyDataSetChanged();
-                return true;
-
-            case R.id.action_odjava:
-                Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(@NonNull Status status) {
-                        if (status.isSuccess()) {
-
-                            goLogInScreen();
-                        }
-                    }
-                });
                 return true;
 
             default:
@@ -120,6 +107,7 @@ public class ActivityListMain extends AppCompatActivity  {
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         // specify an adapter (see also next example)
+        app = (ApplicationMy) getApplication();
         mAdapter = new AdapterLokacija(app.getAll(), this);
         mRecyclerView.setAdapter(mAdapter);
         // setSpinner();
@@ -248,9 +236,12 @@ public class ActivityListMain extends AppCompatActivity  {
     protected void onStart() {
         super.onStart();
         getPermissions();
+
         SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
 
         String ime=sharedpreferences.getString("name",null);
+        Toast.makeText(getApplicationContext(), "Pozdravljen "+ime, Toast.LENGTH_SHORT).show();
+
     }
 
 
@@ -266,6 +257,17 @@ public class ActivityListMain extends AppCompatActivity  {
         startActivity(intent);
     }
 
+    public void logOut(View view) {
+        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
+            @Override
+            public void onResult(@NonNull Status status) {
+                if (status.isSuccess()) {
+                    goLogInScreen();
+                } else {
+                }
+            }
+        });
+    }
     public void revoke(View view) {
         Auth.GoogleSignInApi.revokeAccess(googleApiClient).setResultCallback(new ResultCallback<Status>() {
             @Override
@@ -287,7 +289,7 @@ public class ActivityListMain extends AppCompatActivity  {
     @Override
     protected void onResume() {
         super.onResume();
-
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override

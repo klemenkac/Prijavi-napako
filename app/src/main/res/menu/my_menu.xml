@@ -13,8 +13,4 @@
         android:title="@string/action_settings"
         app:showAsAction="never"/>
 
-    <item android:id="@+id/action_odjava"
-        android:title="@string/action_odjava"
-        app:showAsAction="never"/>
-
 </menu>

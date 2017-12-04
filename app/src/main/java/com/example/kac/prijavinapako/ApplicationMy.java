@@ -8,7 +8,6 @@ import com.example.TagList;
 
 import android.app.AlertDialog;
 import android.app.Application;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.StrictMode;
@@ -77,19 +76,18 @@ public class ApplicationMy extends Application {
         }*/
     }
 
-
-    public void getData() {
+    private void getData() {
         //Toast.makeText(getApplicationContext(), "Pridobivam podatke...", Toast.LENGTH_SHORT).show();
 
         try{
-            URL url = new URL("https://klemenkac.000webhostapp.com/GetNapaka.php");
+            URL url = new URL(address);
             HttpURLConnection con =(HttpURLConnection) url.openConnection();
 
             con.setRequestMethod("GET");
 
             is=new BufferedInputStream(con.getInputStream());
         }catch(Exception e){
-            Toast.makeText(getApplicationContext(), "Website is probably sleeping1.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Napaka1", Toast.LENGTH_SHORT).show();
 
             e.printStackTrace();
         }
@@ -104,7 +102,7 @@ public class ApplicationMy extends Application {
             is.close();
             result=sb.toString();
         }catch (Exception e){
-            Toast.makeText(getApplicationContext(), "Website is probably sleeping2.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Napaka2", Toast.LENGTH_SHORT).show();
 
             e.printStackTrace();
         }
@@ -123,29 +121,25 @@ public class ApplicationMy extends Application {
             String dataDatum;
 
             DataAll da = new DataAll();
-            SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
-            String ime=sharedpreferences.getString("name",null);
+            Lokacija tmp;
+
             for(int i=0;i<ja.length();i++){
-                jo = ja.getJSONObject(i);
-                if(jo.getString("user").equals(ime)) {
-                    dataId = jo.getString("id");
-                    dataDom = jo.getString("dom");
-                    dataSoba = jo.getString("soba");
-                    dataOpis = jo.getString("opis");
-                    dataUser = jo.getString("user");
-                    dataTip = jo.getString("tip_napake");
-                    dataDatum = jo.getString("datum");
-                    dataSlika = jo.getString("slika");
+                jo=ja.getJSONObject(i);
+                dataId=jo.getString("id");
+                dataDom=jo.getString("dom");
+                dataSoba=jo.getString("soba");
+                dataOpis=jo.getString("opis");
+                dataUser=jo.getString("user");
+                dataTip=jo.getString("tip_napake");
+                dataDatum=jo.getString("datum");
+                //dataSlika=jo.getString("slika");
 
-                    da.addLocation(dataId, dataDom, dataSoba, dataUser, dataDatum, dataOpis, dataSlika, dataTip);
-                }
-
-
+                tmp = da.addLocation(dataId,dataDom, dataSoba,dataUser,dataDatum, dataOpis,null,dataTip);
             }
 //            Toast.makeText(getApplicationContext(), data[0].toString(), Toast.LENGTH_SHORT).show();
             all = da;
         }catch (Exception e){
-            Toast.makeText(getApplicationContext(), "Website is probably sleeping.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Napaka3", Toast.LENGTH_SHORT).show();
 
             e.printStackTrace();
         }
@@ -211,8 +205,6 @@ public class ApplicationMy extends Application {
         else return false;
         return true;
     }
-
-
 
     public void removeLocationByPosition(int adapterPosition) {
 
