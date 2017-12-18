@@ -31,6 +31,7 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
     public static int UPDATE_DISTANCE_IF_DIFF_IN_M=10;
 
 
+
     public void setLastLocation(Location l) {
         if (last==null) {
             last = l;
@@ -91,35 +92,17 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
 
         //holder.txtHeader.setText(trenutni.getIdUser());
 
+
         if (trenutni.hasImage()) {
-            if(trenutni.getFileName().length()>100){
-                byte[] decodedString = Base64.decode(trenutni.getFileName(), Base64.DEFAULT);
-                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                holder.iv.setImageBitmap(decodedByte);
-            }else{
 
+            byte[] decodedString = Base64.decode(trenutni.getFileName(), Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            holder.iv.setImageBitmap(decodedByte);
 
-
-                File f = new File(trenutni.getFileName()); //
-                Picasso.with(ac.getApplicationContext())
-                        .load(f) //URL
-                        .placeholder(R.drawable.ic_cloud_download_black_124dp)
-                        .error(R.drawable.ic_error_black_124dp)
-                        // To fit image into imageView
-                        .fit()
-                        // To prevent fade animation
-                        .noFade()
-                        .into(holder.iv);
-
-                //   Picasso.with(ac).load(trenutni.getFileName()).into(holder.iv);
-                // holder.iv.setImageDrawable(this.ac.getDrawable(R.drawable.ic_airline_seat_recline_extra_black_24dp));
-
-<<<<<<< HEAD
-            }
-=======
+            /*
             File f = new File(trenutni.getFileName()); //
             Picasso.with(ac.getApplicationContext())
-                    .load(f) //URL
+                    .load() //URL
                     .placeholder(R.drawable.ic_cloud_download_black_124dp)
                     .error(R.drawable.ic_error_black_124dp)
                     // To fit image into imageView
@@ -127,10 +110,9 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
                     // To prevent fade animation
                     .noFade()
                     .into(holder.iv);
-
+*/
             //   Picasso.with(ac).load(trenutni.getFileName()).into(holder.iv);
             // holder.iv.setImageDrawable(this.ac.getDrawable(R.drawable.ic_airline_seat_recline_extra_black_24dp));
->>>>>>> d3a6ded9de8295daac7f66ae6a02c06fd2fd5c49
         }
         else {
             holder.iv.setImageDrawable(this.ac.getDrawable(R.drawable.tools));
@@ -168,6 +150,12 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
         holder.txtTip.setText(trenutni.getTipNapake());
         holder.txtUser.setText(trenutni.getIdUser());
         holder.txtDatum.setText(trenutni.getDate());
+
+        byte[] decodedString = Base64.decode(trenutni.getFileName(), Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        holder.iv.setImageBitmap(decodedByte);
+
+
     }
 
 
@@ -178,5 +166,3 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
 
 
 }
-
-

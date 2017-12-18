@@ -33,14 +33,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<<<<<<< HEAD
 
 
         <activity android:name=".ActivityNFCzapis"/>
-        <activity android:name=".LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-=======
->>>>>>> d3a6ded9de8295daac7f66ae6a02c06fd2fd5c49
         <activity android:name=".ActivityMySettings"/>
         <activity android:name=".ActivityListMain"/>
         <activity android:name=".LoginActivity"

@@ -123,7 +123,7 @@ public class GPSTracker extends Service {
                     LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
                     mLocationListeners[1]);
             mLocationListeners[1].setOK(true);
-        } catch (java.lang.SecurityException ex) {
+        } catch (SecurityException ex) {
             mLocationListeners[1].setOK(false);
             Log.i(TAG, "fail to request location update, ignore", ex);
         } catch (IllegalArgumentException ex) {
@@ -135,7 +135,7 @@ public class GPSTracker extends Service {
                     LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
                     mLocationListeners[0]);
             mLocationListeners[0].setOK(true);
-        } catch (java.lang.SecurityException ex) {
+        } catch (SecurityException ex) {
             mLocationListeners[0].setOK(false);
             Log.i(TAG, "fail to request location update, ignore", ex);
         } catch (IllegalArgumentException ex) {

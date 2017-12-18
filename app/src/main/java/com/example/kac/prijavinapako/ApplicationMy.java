@@ -8,6 +8,7 @@ import com.example.TagList;
 
 import android.app.AlertDialog;
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.StrictMode;
@@ -87,11 +88,11 @@ public class ApplicationMy extends Application {
 
             is=new BufferedInputStream(con.getInputStream());
         }catch(Exception e){
-<<<<<<< HEAD
+
             Toast.makeText(getApplicationContext(), "Strežnik ne dela, poskusi kasneje!", Toast.LENGTH_SHORT).show();
-=======
+
             Toast.makeText(getApplicationContext(), "Napaka1", Toast.LENGTH_SHORT).show();
->>>>>>> d3a6ded9de8295daac7f66ae6a02c06fd2fd5c49
+
 
             e.printStackTrace();
         }
@@ -106,11 +107,11 @@ public class ApplicationMy extends Application {
             is.close();
             result=sb.toString();
         }catch (Exception e){
-<<<<<<< HEAD
+
             Toast.makeText(getApplicationContext(), "Strežnik ne dela, poskusi kasneje!", Toast.LENGTH_SHORT).show();
-=======
+
             Toast.makeText(getApplicationContext(), "Napaka2", Toast.LENGTH_SHORT).show();
->>>>>>> d3a6ded9de8295daac7f66ae6a02c06fd2fd5c49
+
 
             e.printStackTrace();
         }
@@ -129,13 +130,11 @@ public class ApplicationMy extends Application {
             String dataDatum;
 
             DataAll da = new DataAll();
-            Lokacija tmp;
-<<<<<<< HEAD
             SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
-            String juzer=sharedpreferences.getString("name",null);
+            String ime=sharedpreferences.getString("name",null);
             for(int i=0;i<ja.length();i++){
-                jo=ja.getJSONObject(i);
-                if(jo.getString("user").equals(juzer)) {
+                jo = ja.getJSONObject(i);
+                if(jo.getString("user").equals(ime)) {
                     dataId = jo.getString("id");
                     dataDom = jo.getString("dom");
                     dataSoba = jo.getString("soba");
@@ -145,32 +144,15 @@ public class ApplicationMy extends Application {
                     dataDatum = jo.getString("datum");
                     dataSlika = jo.getString("slika");
 
-                    tmp = da.addLocation(dataId, dataDom, dataSoba, dataUser, dataDatum, dataOpis, dataSlika, dataTip);
+                    da.addLocation(dataId, dataDom, dataSoba, dataUser, dataDatum, dataOpis, dataSlika, dataTip);
                 }
-=======
 
-            for(int i=0;i<ja.length();i++){
-                jo=ja.getJSONObject(i);
-                dataId=jo.getString("id");
-                dataDom=jo.getString("dom");
-                dataSoba=jo.getString("soba");
-                dataOpis=jo.getString("opis");
-                dataUser=jo.getString("user");
-                dataTip=jo.getString("tip_napake");
-                dataDatum=jo.getString("datum");
-                //dataSlika=jo.getString("slika");
 
-                tmp = da.addLocation(dataId,dataDom, dataSoba,dataUser,dataDatum, dataOpis,null,dataTip);
->>>>>>> d3a6ded9de8295daac7f66ae6a02c06fd2fd5c49
             }
 //            Toast.makeText(getApplicationContext(), data[0].toString(), Toast.LENGTH_SHORT).show();
             all = da;
         }catch (Exception e){
-<<<<<<< HEAD
-            Toast.makeText(getApplicationContext(), "Strežnik ne dela, poskusi kasneje!", Toast.LENGTH_SHORT).show();
-=======
-            Toast.makeText(getApplicationContext(), "Napaka3", Toast.LENGTH_SHORT).show();
->>>>>>> d3a6ded9de8295daac7f66ae6a02c06fd2fd5c49
+            Toast.makeText(getApplicationContext(), "Website is probably sleeping.", Toast.LENGTH_SHORT).show();
 
             e.printStackTrace();
         }

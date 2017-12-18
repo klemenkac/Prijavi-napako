@@ -93,7 +93,7 @@ public class ActivityListMain extends AppCompatActivity  {
                 startActivity(new Intent(this,ActivityMySettings.class));
                 return true;
 
-<<<<<<< HEAD
+
             case R.id.action_odjava:
                 Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
                     @Override
@@ -106,8 +106,6 @@ public class ActivityListMain extends AppCompatActivity  {
                 });
                 return true;
 
-=======
->>>>>>> d3a6ded9de8295daac7f66ae6a02c06fd2fd5c49
             case R.id.action_sort:
                 //app.sortUpdate();
                 app.sortChangeAndUpdate();
@@ -324,10 +322,7 @@ public class ActivityListMain extends AppCompatActivity  {
         SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
 
         String ime=sharedpreferences.getString("name",null);
-<<<<<<< HEAD
-=======
-        Toast.makeText(getApplicationContext(), "Pozdravljen "+ime, Toast.LENGTH_SHORT).show();
->>>>>>> d3a6ded9de8295daac7f66ae6a02c06fd2fd5c49
+
 
     }
 
@@ -377,7 +372,7 @@ public class ActivityListMain extends AppCompatActivity  {
     protected void onResume() {
         super.onResume();
         mAdapter.notifyDataSetChanged();
-<<<<<<< HEAD
+
         enableForegroundFispatchSystem();
     }
 
@@ -385,8 +380,7 @@ public class ActivityListMain extends AppCompatActivity  {
     protected void onPause() {
         super.onPause();
         disableForegroundDispatchSystem();
-=======
->>>>>>> d3a6ded9de8295daac7f66ae6a02c06fd2fd5c49
+
     }
 
     @Override
