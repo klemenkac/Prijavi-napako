@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.kac.prijavinapako">
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
+    <uses-sdk android:minSdkVersion="10"/>
     <uses-feature android:name="android.hardware.location.gps" />
     <uses-feature android:name="android.hardware.camera2" android:required="true" />
-
+    <uses-feature android:name="android.hardware.nfc" android:required="true" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.INTERNET" />
@@ -14,6 +14,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS"/>
+    <uses-permission android:name="android.permission.NFC"/>
+
     <application
         android:name=".ApplicationMy"
         android:allowBackup="true"
@@ -31,6 +33,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<<<<<<< HEAD
+
+
+        <activity android:name=".ActivityNFCzapis"/>
+        <activity android:name=".LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+=======
+>>>>>>> d3a6ded9de8295daac7f66ae6a02c06fd2fd5c49
         <activity android:name=".ActivityMySettings"/>
         <activity android:name=".ActivityListMain"/>
         <activity android:name=".LoginActivity"
@@ -40,7 +50,7 @@
         <activity android:name=".UserAreaActivity"/>
         <activity android:name=".ActivityLocation"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan|adjustResize"/>
+            android:windowSoftInputMode="adjustPan"/>
 
 
     </application>

@@ -102,7 +102,6 @@ public class ActivityLocation extends AppCompatActivity {
         app = (ApplicationMy) getApplication();
         ivSlika =(ImageView) findViewById(R.id.imageViewmain);
         edS = (EditText) findViewById(R.id.txtSoba);
-        domSpinner.setHintTextColor(Color.BLUE);
         edO = (EditText) findViewById(R.id.txtOpis);
         tvDatum = (TextView) findViewById(R.id.datum);
         stateNew = false;
@@ -119,7 +118,6 @@ public class ActivityLocation extends AppCompatActivity {
         }
 
         ID="";
-
     }
 
     @Override
@@ -149,9 +147,7 @@ public class ActivityLocation extends AppCompatActivity {
             Date cDate = new Date();
             String datum = new SimpleDateFormat("dd. MM. yyyy").format(cDate);
 
-
-
-            l = new Lokacija("","Študentski dom ", "Soba", app.getAll().getUserMe().getIdUser(),datum,"",path,"Tip napake");
+            l = new Lokacija("","", "", app.getAll().getUserMe().getIdUser(),datum,"",path,"");
             update(l);
             //Toast.makeText(this, "The photo is save in device, please check this path: " + path, Toast.LENGTH_SHORT).show();
         }else{
@@ -168,19 +164,19 @@ public class ActivityLocation extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Bundle extras = getIntent().getExtras();
-        if( (extras !=null) && (!ID.equals(NEW_LOCATION_ID)))
-        {
-            ID = extras.getString(DataAll.LOKACIJA_ID);
-            if (ID.equals(NEW_LOCATION_ID)) {
-                stateNew = true;
-                addNewLocation();
-            }else {
-                stateNew = false;
-                setLokacija(extras.getString(DataAll.LOKACIJA_ID));
+            if((extras !=null) && (!ID.equals(NEW_LOCATION_ID)))
+            {
+                ID = extras.getString(DataAll.LOKACIJA_ID);
+                if (ID.equals(NEW_LOCATION_ID)) {
+                    stateNew = true;
+                    addNewLocation();
+                }else {
+                    stateNew = false;
+                    setLokacija(extras.getString(DataAll.LOKACIJA_ID));
+                }
+            } else {
+                System.out.println("Nič ni v extras!");
             }
-        } else {
-            System.out.println("Nič ni v extras!");
-        }
 
     }
 
@@ -233,18 +229,28 @@ public class ActivityLocation extends AppCompatActivity {
             ivSlika.setImageDrawable(this.getDrawable(R.drawable.tools));
         }
 
+        Intent iin= getIntent();
+        Bundle b = iin.getExtras();
+        if(b.get("Vpisna")!=null){
+            Toast.makeText(this, b.get("Vpisna").toString(), Toast.LENGTH_SHORT).show();
 
+            if(b.get("Vpisna").equals("E1091722"))
+            {
+                edS.setText("110");
+                domSpinner.setText("Dom 13");
+            }
+            else if(b.get("Vpisna").equals("E123567"))
+            {
+                edS.setText("220");
+                domSpinner.setText("Dom 6");
+            }
+        }
 
     }
 
-
     public void save() {
-
-
         MaterialBetterSpinner domSpinner = (MaterialBetterSpinner)findViewById(spinnerDom);
         l.setDom(domSpinner.getText().toString());
-
-
 
         MaterialBetterSpinner tipSpinner = (MaterialBetterSpinner)findViewById(spinnerTipNapake);
         l.setTipNapake(tipSpinner.getText().toString());
@@ -252,6 +258,25 @@ public class ActivityLocation extends AppCompatActivity {
         l.setOpis(edO.getText().toString());
 
         l.setSoba(edS.getText().toString());
+<<<<<<< HEAD
+
+        if(stateNew){
+            SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
+            String ime=sharedpreferences.getString("name",null);
+            l.setIdUser(ime);
+
+            Bitmap bm = BitmapFactory.decodeFile(path);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+            byte[] b = baos.toByteArray();
+
+            encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+
+            l.setFileName(encodedImage);
+        }
+
+=======
+>>>>>>> d3a6ded9de8295daac7f66ae6a02c06fd2fd5c49
         // l.setDate(tvDatum.getText().toString());
 
 
@@ -269,23 +294,69 @@ public class ActivityLocation extends AppCompatActivity {
 
     public void onClickSaveMe(View v) {
 
+
         int a = l.getId().length();
-       // Toast.makeText(this,a + "", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this,a + "", Toast.LENGTH_SHORT).show();
         MaterialBetterSpinner domSpinner = (MaterialBetterSpinner)findViewById(spinnerDom);
         MaterialBetterSpinner tipSpinner = (MaterialBetterSpinner)findViewById(spinnerTipNapake);
-        String ajdi = l.getId().toString();
-        String opis = edO.getText().toString();
-        String dom = domSpinner.getText().toString();
-        String soba = edS.getText().toString();
-        String tip_napake = tipSpinner.getText().toString();
+        if(!domSpinner.getText().toString().equals("") && !tipSpinner.getText().toString().equals("")
+                && !edO.getText().toString().equals("") && !edS.getText().toString().equals("")) {
+            Toast.makeText(getApplicationContext(), domSpinner.getText().toString(), Toast.LENGTH_SHORT).show();
+            String ajdi = l.getId().toString();
+            String opis = edO.getText().toString();
+            String dom = domSpinner.getText().toString();
+            String soba = edS.getText().toString();
+            String tip_napake = tipSpinner.getText().toString();
 
 
-        Date cDate = new Date();
-        String datum = new SimpleDateFormat("dd. MM. yyyy").format(cDate);
+            Date cDate = new Date();
+            String datum = new SimpleDateFormat("dd. MM. yyyy").format(cDate);
 
-        if (stateNew){
-            l.setDate(datum);
-            app.getAll().addLocation(l);
+            if (stateNew) {
+                l.setDate(datum);
+                app.getAll().addLocation(l);
+
+                Response.Listener<String> responseListener = new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            boolean success = jsonResponse.getBoolean("success");
+
+                            if (!success) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(ActivityLocation.this);
+                                builder.setMessage("Napaka pri objavi napake na strežnik.")
+                                        .setNegativeButton("Retry", null)
+                                        .create()
+                                        .show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                // Toast.makeText(this, app.getAll().getUserMe().getIdUser().toString(), Toast.LENGTH_SHORT).show();
+                SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
+                String juzer = sharedpreferences.getString("name", null);
+
+
+                if (path != null) {
+
+
+                    Bitmap bm = BitmapFactory.decodeFile(path);
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+                    byte[] b = baos.toByteArray();
+
+                    encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+
+                }
+
+                NapakaRequest napakaRequest = new NapakaRequest(ajdi, dom, soba, tip_napake, opis, juzer, encodedImage, responseListener);
+                RequestQueue queue = Volley.newRequestQueue(ActivityLocation.this);
+                queue.add(napakaRequest);
+            }
+
 
             Response.Listener<String> responseListener = new Response.Listener<String>() {
                 @Override
@@ -306,6 +377,10 @@ public class ActivityLocation extends AppCompatActivity {
                     }
                 }
             };
+<<<<<<< HEAD
+
+            NapakaUpdateRequest napakaUpdateRequest = new NapakaUpdateRequest(ajdi, dom, soba, tip_napake, opis, responseListener);
+=======
            // Toast.makeText(this, app.getAll().getUserMe().getIdUser().toString(), Toast.LENGTH_SHORT).show();
             String juzer=app.getAll().getUserMe().getIdUser().toString();
 
@@ -324,39 +399,18 @@ public class ActivityLocation extends AppCompatActivity {
             }
 
             NapakaRequest napakaRequest = new NapakaRequest(ajdi, dom, soba, tip_napake, opis, juzer,"", responseListener);
+>>>>>>> d3a6ded9de8295daac7f66ae6a02c06fd2fd5c49
             RequestQueue queue = Volley.newRequestQueue(ActivityLocation.this);
-            queue.add(napakaRequest);
+            queue.add(napakaUpdateRequest);
+
+            //Toast.makeText(this, l.getId().toString(), Toast.LENGTH_SHORT).show();
+
+            save();
+            finish();
         }
-
-
-        Response.Listener<String> responseListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    boolean success = jsonResponse.getBoolean("success");
-
-                    if (!success) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(ActivityLocation.this);
-                        builder.setMessage("Napaka pri objavi napake na strežnik.")
-                                .setNegativeButton("Retry", null)
-                                .create()
-                                .show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        NapakaUpdateRequest napakaUpdateRequest = new NapakaUpdateRequest(ajdi, dom,soba,tip_napake,opis, responseListener);
-        RequestQueue queue = Volley.newRequestQueue(ActivityLocation.this);
-        queue.add(napakaUpdateRequest);
-
-        //Toast.makeText(this, l.getId().toString(), Toast.LENGTH_SHORT).show();
-
-        save();
-        finish();
+        else{
+            Toast.makeText(getApplicationContext(), "Nisi izpolnil/a vseh vnosnih polj!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

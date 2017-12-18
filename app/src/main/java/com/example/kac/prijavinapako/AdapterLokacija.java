@@ -63,7 +63,7 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
             txtOpis = (TextView) v.findViewById(R.id.textViewOpis);
             txtTip = (TextView) v.findViewById(R.id.textViewTip);
             txtUser = (TextView) v.findViewById(R.id.textViewUser);
-           // txtFooter = (TextView) v.findViewById(R.id.secondLine);
+            // txtFooter = (TextView) v.findViewById(R.id.secondLine);
             txtDatum = (TextView) v.findViewById(R.id.textViewDatum);
             iv = (ImageView)v.findViewById(R.id.icon);
         }
@@ -92,7 +92,31 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
         //holder.txtHeader.setText(trenutni.getIdUser());
 
         if (trenutni.hasImage()) {
+            if(trenutni.getFileName().length()>100){
+                byte[] decodedString = Base64.decode(trenutni.getFileName(), Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                holder.iv.setImageBitmap(decodedByte);
+            }else{
 
+
+
+                File f = new File(trenutni.getFileName()); //
+                Picasso.with(ac.getApplicationContext())
+                        .load(f) //URL
+                        .placeholder(R.drawable.ic_cloud_download_black_124dp)
+                        .error(R.drawable.ic_error_black_124dp)
+                        // To fit image into imageView
+                        .fit()
+                        // To prevent fade animation
+                        .noFade()
+                        .into(holder.iv);
+
+                //   Picasso.with(ac).load(trenutni.getFileName()).into(holder.iv);
+                // holder.iv.setImageDrawable(this.ac.getDrawable(R.drawable.ic_airline_seat_recline_extra_black_24dp));
+
+<<<<<<< HEAD
+            }
+=======
             File f = new File(trenutni.getFileName()); //
             Picasso.with(ac.getApplicationContext())
                     .load(f) //URL
@@ -106,6 +130,7 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
 
             //   Picasso.with(ac).load(trenutni.getFileName()).into(holder.iv);
             // holder.iv.setImageDrawable(this.ac.getDrawable(R.drawable.ic_airline_seat_recline_extra_black_24dp));
+>>>>>>> d3a6ded9de8295daac7f66ae6a02c06fd2fd5c49
         }
         else {
             holder.iv.setImageDrawable(this.ac.getDrawable(R.drawable.tools));
@@ -153,4 +178,5 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
 
 
 }
+
 

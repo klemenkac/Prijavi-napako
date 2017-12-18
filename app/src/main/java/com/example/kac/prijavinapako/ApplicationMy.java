@@ -87,7 +87,11 @@ public class ApplicationMy extends Application {
 
             is=new BufferedInputStream(con.getInputStream());
         }catch(Exception e){
+<<<<<<< HEAD
+            Toast.makeText(getApplicationContext(), "Strežnik ne dela, poskusi kasneje!", Toast.LENGTH_SHORT).show();
+=======
             Toast.makeText(getApplicationContext(), "Napaka1", Toast.LENGTH_SHORT).show();
+>>>>>>> d3a6ded9de8295daac7f66ae6a02c06fd2fd5c49
 
             e.printStackTrace();
         }
@@ -102,7 +106,11 @@ public class ApplicationMy extends Application {
             is.close();
             result=sb.toString();
         }catch (Exception e){
+<<<<<<< HEAD
+            Toast.makeText(getApplicationContext(), "Strežnik ne dela, poskusi kasneje!", Toast.LENGTH_SHORT).show();
+=======
             Toast.makeText(getApplicationContext(), "Napaka2", Toast.LENGTH_SHORT).show();
+>>>>>>> d3a6ded9de8295daac7f66ae6a02c06fd2fd5c49
 
             e.printStackTrace();
         }
@@ -122,6 +130,24 @@ public class ApplicationMy extends Application {
 
             DataAll da = new DataAll();
             Lokacija tmp;
+<<<<<<< HEAD
+            SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
+            String juzer=sharedpreferences.getString("name",null);
+            for(int i=0;i<ja.length();i++){
+                jo=ja.getJSONObject(i);
+                if(jo.getString("user").equals(juzer)) {
+                    dataId = jo.getString("id");
+                    dataDom = jo.getString("dom");
+                    dataSoba = jo.getString("soba");
+                    dataOpis = jo.getString("opis");
+                    dataUser = jo.getString("user");
+                    dataTip = jo.getString("tip_napake");
+                    dataDatum = jo.getString("datum");
+                    dataSlika = jo.getString("slika");
+
+                    tmp = da.addLocation(dataId, dataDom, dataSoba, dataUser, dataDatum, dataOpis, dataSlika, dataTip);
+                }
+=======
 
             for(int i=0;i<ja.length();i++){
                 jo=ja.getJSONObject(i);
@@ -135,11 +161,16 @@ public class ApplicationMy extends Application {
                 //dataSlika=jo.getString("slika");
 
                 tmp = da.addLocation(dataId,dataDom, dataSoba,dataUser,dataDatum, dataOpis,null,dataTip);
+>>>>>>> d3a6ded9de8295daac7f66ae6a02c06fd2fd5c49
             }
 //            Toast.makeText(getApplicationContext(), data[0].toString(), Toast.LENGTH_SHORT).show();
             all = da;
         }catch (Exception e){
+<<<<<<< HEAD
+            Toast.makeText(getApplicationContext(), "Strežnik ne dela, poskusi kasneje!", Toast.LENGTH_SHORT).show();
+=======
             Toast.makeText(getApplicationContext(), "Napaka3", Toast.LENGTH_SHORT).show();
+>>>>>>> d3a6ded9de8295daac7f66ae6a02c06fd2fd5c49
 
             e.printStackTrace();
         }
@@ -232,7 +263,7 @@ public class ApplicationMy extends Application {
         DeleteRequest deleteRequest = new DeleteRequest(ajdi, responseListener);
         RequestQueue queue = Volley.newRequestQueue(ApplicationMy.this);
         queue.add(deleteRequest);
-       all.getLokacijaAll().remove(adapterPosition);
+        all.getLokacijaAll().remove(adapterPosition);
     }
 
     public void sortUpdate() {
@@ -258,7 +289,7 @@ public class ApplicationMy extends Application {
                     @Override
                     public int compare(Lokacija l1, Lokacija l2) {
                         if (l1.getDom()==l2.getDom()) return 0;
-                      //  a.compareTo(another_string) <0
+                        //  a.compareTo(another_string) <0
 
                         if (l1.getDom().compareTo(l2.getDom()) > 0) return -1;
                         return 1;

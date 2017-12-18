@@ -5,13 +5,22 @@ package com.example.kac.prijavinapako;
  */
 
 import android.Manifest;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.location.Location;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.Ndef;
+import android.nfc.tech.NdefFormatable;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
@@ -52,7 +61,10 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import com.example.kac.prijavinapako.eventbus.MessageEventUpdateLocation;
+
+import java.io.ByteArrayOutputStream;
 import java.util.List;
+import java.util.Locale;
 
 public class ActivityListMain extends AppCompatActivity  {
     private RecyclerView mRecyclerView;
@@ -61,6 +73,7 @@ public class ActivityListMain extends AppCompatActivity  {
     ApplicationMy app;
     private FloatingActionButton fab;
     private GoogleApiClient googleApiClient;
+    NfcAdapter nfcAdapter;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -71,11 +84,30 @@ public class ActivityListMain extends AppCompatActivity  {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_NFCzapis:
+                startActivity(new Intent(this,ActivityNFCzapis.class));
+                return true;
+
             case R.id.action_settings:
                 // User chose the "Settings" item, show the app settings UI...
                 startActivity(new Intent(this,ActivityMySettings.class));
                 return true;
 
+<<<<<<< HEAD
+            case R.id.action_odjava:
+                Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(@NonNull Status status) {
+                        if (status.isSuccess()) {
+
+                            goLogInScreen();
+                        }
+                    }
+                });
+                return true;
+
+=======
+>>>>>>> d3a6ded9de8295daac7f66ae6a02c06fd2fd5c49
             case R.id.action_sort:
                 //app.sortUpdate();
                 app.sortChangeAndUpdate();
@@ -144,6 +176,58 @@ public class ActivityListMain extends AppCompatActivity  {
                 })
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
+
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+    }
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        if(intent.hasExtra(NfcAdapter.EXTRA_TAG)){
+
+                //Beri
+                Parcelable[] parcelables = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+
+                if(parcelables != null && parcelables.length > 0){
+                    readTextFromMessage((NdefMessage)parcelables[0]);
+                }else{
+                    Toast.makeText(this,"No NDEF messages found!",Toast.LENGTH_LONG).show();
+                }
+
+
+        }
+    }
+
+
+    private void readTextFromMessage(NdefMessage ndefMessage) {
+        NdefRecord[] ndefRecords = ndefMessage.getRecords();
+
+        if(ndefRecords != null && ndefRecords.length>0){
+            NdefRecord ndefRecord = ndefRecords[0];
+
+            String tagContent = getTextFromNdefRecord(ndefRecord);
+
+            //Tukaj berem
+
+            if(tagContent.toString().equals("E1091722")){
+                Intent i = new Intent(getBaseContext(), ActivityLocation.class);
+                i.putExtra(DataAll.LOKACIJA_ID, ActivityLocation.NEW_LOCATION_ID);
+                i.putExtra("Vpisna", "E1091722");
+                startActivity(i);
+            }
+            else if(tagContent.toString().equals("E123567")){
+                Intent i = new Intent(getBaseContext(), ActivityLocation.class);
+                i.putExtra(DataAll.LOKACIJA_ID, ActivityLocation.NEW_LOCATION_ID);
+                i.putExtra("Vpisna", "E123567");
+                startActivity(i);
+            }
+            //Toast.makeText(this,tagContent.toString(),Toast.LENGTH_LONG).show();
+
+        }else{
+            Toast.makeText(this,"No NDEF records found!",Toast.LENGTH_LONG).show();
+        }
     }
 
     public void setDeleteOnSwipe(final RecyclerView mRecyclerView) {
@@ -240,7 +324,10 @@ public class ActivityListMain extends AppCompatActivity  {
         SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
 
         String ime=sharedpreferences.getString("name",null);
+<<<<<<< HEAD
+=======
         Toast.makeText(getApplicationContext(), "Pozdravljen "+ime, Toast.LENGTH_SHORT).show();
+>>>>>>> d3a6ded9de8295daac7f66ae6a02c06fd2fd5c49
 
     }
 
@@ -290,6 +377,16 @@ public class ActivityListMain extends AppCompatActivity  {
     protected void onResume() {
         super.onResume();
         mAdapter.notifyDataSetChanged();
+<<<<<<< HEAD
+        enableForegroundFispatchSystem();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        disableForegroundDispatchSystem();
+=======
+>>>>>>> d3a6ded9de8295daac7f66ae6a02c06fd2fd5c49
     }
 
     @Override
@@ -303,4 +400,34 @@ public class ActivityListMain extends AppCompatActivity  {
         super.onDestroy();
     }
 
+    private void enableForegroundFispatchSystem(){
+        Intent intent = new Intent(this, ActivityListMain.class).addFlags(Intent.FLAG_RECEIVER_REPLACE_PENDING);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        IntentFilter[] intentFilters = new IntentFilter[]{};
+
+        nfcAdapter.enableForegroundDispatch(this,pendingIntent, intentFilters,null);
+
+    }
+
+    private void disableForegroundDispatchSystem(){
+
+        nfcAdapter.disableForegroundDispatch(this);
+    }
+
+
+    public String getTextFromNdefRecord(NdefRecord ndefRecord){
+        String tagContent=null;
+        try{
+            byte[] payload = ndefRecord.getPayload();
+            String textEncoding = ((payload[0] & 128) == 0) ? "UTF-8" : "UTF-16";
+            int languageSize = payload[0] & 0063;
+            tagContent = new String(payload, languageSize +1, payload.length-languageSize-1, textEncoding);
+        }catch (Exception e){
+
+        }
+        return tagContent;
+    }
 }
+

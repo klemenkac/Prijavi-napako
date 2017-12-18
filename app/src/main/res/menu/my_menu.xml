@@ -13,4 +13,15 @@
         android:title="@string/action_settings"
         app:showAsAction="never"/>
 
+<<<<<<< HEAD
+    <item android:id="@+id/action_NFCzapis"
+        android:title="NFC pisanje"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/action_odjava"
+        android:title="@string/action_odjava"
+        app:showAsAction="never"/>
+
+=======
+>>>>>>> d3a6ded9de8295daac7f66ae6a02c06fd2fd5c49
 </menu>
