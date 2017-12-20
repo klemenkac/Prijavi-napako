@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://C:\Users\Klemen\Desktop\Prijavi-napako-3ce982c7b7d4b1eddcdcc94c3e280cac157bbe17\Prijavi-napako.iml" filepath="C:\Users\Klemen\Desktop\Prijavi-napako-3ce982c7b7d4b1eddcdcc94c3e280cac157bbe17\Prijavi-napako.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Prijavi-napako-3ce982c7b7d4b1eddcdcc94c3e280cac157bbe17.iml" filepath="$PROJECT_DIR$/Prijavi-napako-3ce982c7b7d4b1eddcdcc94c3e280cac157bbe17.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Prijavi-napako.iml" filepath="$PROJECT_DIR$/Prijavi-napako.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/lib/lib.iml" filepath="$PROJECT_DIR$/lib/lib.iml" />
     </modules>

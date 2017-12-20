@@ -14,7 +14,7 @@
         app:showAsAction="never"/>
 
     <item android:id="@+id/action_NFCzapis"
-        android:title="NFC pisanje"
+        android:title="NFC pisanje/branje"
         app:showAsAction="never"/>
 
     <item android:id="@+id/action_odjava"

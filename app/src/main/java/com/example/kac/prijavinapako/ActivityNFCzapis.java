@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -37,11 +38,19 @@ public class ActivityNFCzapis extends AppCompatActivity {
     Integer beri=0;
     ToggleButton tglReadWrite;
     TextView txtTagContent;
+    RadioButton rbPisanje;
+    RadioButton rbBranje;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nfczapis);
+
+        rbPisanje = (RadioButton) findViewById(R.id.rbPisanje);
+        rbBranje = (RadioButton) findViewById(R.id.rbBranje);
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         txtTagContent = (EditText)findViewById(R.id.txtTagContent);
@@ -61,6 +70,25 @@ public class ActivityNFCzapis extends AppCompatActivity {
         super.onPause();
 
         disableForegroundDispatchSystem();
+    }
+
+    public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.rbPisanje:
+                if (checked)
+                    pisi=1;
+                beri=0;
+                    break;
+            case R.id.rbBranje:
+                if (checked)
+                    beri=1;
+                pisi=0;
+                    break;
+        }
     }
 
     @Override
@@ -192,7 +220,7 @@ public class ActivityNFCzapis extends AppCompatActivity {
                 ndef.writeNdefMessage(ndefMessage);
                 ndef.close();
                 Toast.makeText(this,"Tag writen!",Toast.LENGTH_LONG).show();
-
+                txtTagContent.setText("");
             }
 
         }catch (Exception e){

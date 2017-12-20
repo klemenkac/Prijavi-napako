@@ -68,6 +68,7 @@ public class ActivityLocation extends AppCompatActivity {
     EditText edO;
     TextView tvDatum;
     String path;
+    TextView stanovalec;
     Button save;
     Lokacija l;
     LokacijaTag lt;
@@ -102,10 +103,11 @@ public class ActivityLocation extends AppCompatActivity {
         app = (ApplicationMy) getApplication();
         ivSlika =(ImageView) findViewById(R.id.imageViewmain);
         edS = (EditText) findViewById(R.id.txtSoba);
-        domSpinner.setHintTextColor(Color.BLUE);
         edO = (EditText) findViewById(R.id.txtOpis);
+        stanovalec = (TextView) findViewById(R.id.stanovalec);
         tvDatum = (TextView) findViewById(R.id.datum);
         stateNew = false;
+        stanovalec.setVisibility(View.INVISIBLE);
 
         permissionGranted = new PermissionGranted(this);
 
@@ -149,9 +151,7 @@ public class ActivityLocation extends AppCompatActivity {
             Date cDate = new Date();
             String datum = new SimpleDateFormat("dd. MM. yyyy").format(cDate);
 
-
-
-            l = new Lokacija("","Študentski dom ", "Soba", app.getAll().getUserMe().getIdUser(),datum,"",path,"Tip napake");
+            l = new Lokacija("","", "", app.getAll().getUserMe().getIdUser(),datum,"",path,"");
             update(l);
             //Toast.makeText(this, "The photo is save in device, please check this path: " + path, Toast.LENGTH_SHORT).show();
         }else{
@@ -206,7 +206,23 @@ public class ActivityLocation extends AppCompatActivity {
         edS.setText(""+l.getSoba());
 
 
-        edO.setText(l.getOpis());
+        if(!stateNew){
+            edO.setText(l.getOpis());
+            edO.setEnabled(false);
+            edS.setEnabled(false);
+            domSpinner.setEnabled(false);
+            domSpinner.setFocusable(false);
+            tipSpinner.setEnabled(false);
+            tipSpinner.setFocusable(false);
+            Button posljiButn= (Button) findViewById(R.id.buttonSave);
+            posljiButn.setVisibility(View.INVISIBLE);
+            stanovalec.setVisibility(View.VISIBLE);
+            stanovalec.setText(l.getIdUser());
+        }
+        else{
+            edO.setText(l.getOpis());
+        }
+
 
         if (l.hasImage()) {
 

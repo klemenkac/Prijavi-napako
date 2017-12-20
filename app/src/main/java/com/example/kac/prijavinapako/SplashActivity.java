@@ -2,46 +2,22 @@ package com.example.kac.prijavinapako;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 /**
- * Created by Klemen on 21. 11. 2017.
+ * Created by Klemen on 20. 12. 2017.
  */
 
-public class SplashActivity extends AppCompatActivity
-{
-    private static final long DELAY = 500;
-    private boolean scheduled = false;
-    private Timer splashTimer;
+public class SplashActivity extends AppCompatActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.splash);
-
-        splashTimer = new Timer();
-        splashTimer.schedule(new TimerTask()
-        {
-            @Override
-            public void run()
-            {
-                SplashActivity.this.finish();
-                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-            }
-        }, DELAY);
-        scheduled = true;
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
-        if (scheduled)
-            splashTimer.cancel();
-        splashTimer.purge();
-    }
 }

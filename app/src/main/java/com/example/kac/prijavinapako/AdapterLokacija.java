@@ -134,7 +134,46 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
             holder.txtDom.setTextColor(Color.DKGRAY);
             holder.txtSoba.setTextColor(Color.DKGRAY);
         }
+
+
+
+        holder.txtDom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AdapterLokacija.startDView(trenutni.getId(),ac);
+            }
+        });
+        holder.txtSoba.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AdapterLokacija.startDView(trenutni.getId(),ac);
+            }
+        });
         holder.txtOpis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AdapterLokacija.startDView(trenutni.getId(),ac);
+            }
+        });
+        holder.txtTip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AdapterLokacija.startDView(trenutni.getId(),ac);
+            }
+        });
+        holder.txtUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AdapterLokacija.startDView(trenutni.getId(),ac);
+            }
+        });
+        holder.txtDatum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AdapterLokacija.startDView(trenutni.getId(),ac);
+            }
+        });
+        holder.iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AdapterLokacija.startDView(trenutni.getId(),ac);

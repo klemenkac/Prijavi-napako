@@ -11,10 +11,8 @@
         android:id="@+id/textViewDatum"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
         android:layout_marginTop="8dp"
+        android:ellipsize="marquee"
         android:gravity="center_vertical"
         android:text="Datum"
         android:textAlignment="center"
@@ -31,20 +29,15 @@
         android:id="@+id/textViewTip"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="0dp"
         android:gravity="center_vertical"
         android:text="Tip"
         android:textAlignment="center"
         android:textColor="@android:color/holo_red_dark"
         android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintBottom_toTopOf="@+id/textViewDatum"
         app:layout_constraintLeft_toRightOf="@+id/textViewOpis"
         app:layout_constraintRight_toLeftOf="@+id/textViewSoba"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/icon"
@@ -67,47 +60,42 @@
         android:id="@+id/textViewOpis"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
         android:ellipsize="marquee"
         android:minLines="1"
         android:text="Opis"
         android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@+id/textViewUser"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline6"
         app:layout_constraintRight_toLeftOf="@+id/guideline7"
+        app:layout_constraintStart_toStartOf="@+id/guideline6"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
         tools:layout_constraintBottom_creator="1"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1"
-        android:layout_marginLeft="8dp" />
+        tools:layout_constraintTop_creator="1" />
 
     <TextView
         android:id="@+id/textViewUser"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="8dp"
         android:ellipsize="marquee"
-        android:minLines="1"
+        android:gravity="center_vertical"
         android:text="user"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/myColorLine1"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline6"
         app:layout_constraintRight_toLeftOf="@+id/guideline7"
+        app:layout_constraintStart_toStartOf="@+id/guideline6"
         app:layout_constraintTop_toTopOf="@+id/guideline2"
         app:layout_constraintVertical_bias="0.0"
         tools:layout_constraintBottom_creator="1"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1"
-        android:layout_marginLeft="8dp" />
+        tools:layout_constraintTop_creator="1" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline6"
@@ -129,10 +117,6 @@
         android:id="@+id/textViewDom"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="0dp"
         android:gravity="center_vertical"
         android:text="Dom X"
         android:textAlignment="center"
@@ -142,8 +126,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="@+id/guideline"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/myColorLine1"
@@ -165,10 +148,7 @@
         android:id="@+id/textViewSoba"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="0dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="8dp"
         android:gravity="center_vertical"
         android:text="225"
         android:textAlignment="center"
@@ -178,8 +158,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="@+id/guideline"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline2"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"

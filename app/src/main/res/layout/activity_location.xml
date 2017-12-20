@@ -8,15 +8,27 @@
     tools:context="com.example.kac.prijavinapako.ActivityLocation">
 
     <TextView
-        android:id="@+id/Opis"
+        android:id="@+id/stanovalec"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        android:text="Stanovalec:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtOpis" />
+
+    <TextView
+        android:id="@+id/opis"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
+        android:layout_marginTop="0dp"
         android:layout_weight="1"
         android:text="Opis:"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="0dp"
         app:layout_constraintTop_toBottomOf="@+id/spinnerTipNapake" />
 
     <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
@@ -86,18 +98,16 @@
         android:id="@+id/txtOpis"
         android:layout_width="0dp"
         android:layout_height="100dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="0dp"
         android:ems="10"
+        android:hint="Poljuben opis napake"
         android:inputType="textMultiLine"
         android:textSize="15sp"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Opis" />
+        app:layout_constraintTop_toBottomOf="@+id/opis" />
 
     <Button
         android:id="@+id/buttonSave"
@@ -142,7 +152,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="Št. sobe"
+        android:hint="Vnesi številko sobe"
         android:inputType="numberSigned"
         app:layout_constraintLeft_toRightOf="@+id/Soba"
         app:layout_constraintRight_toRightOf="parent"

@@ -252,28 +252,26 @@ public class ApplicationMy extends Application {
         //sortType= (sortType+1) / 2;
         switch (sortType) {
             case SORT_BY_DATE:{
-                Toast.makeText(this,"Sortirano po datumu", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"Sortirano po datumu naraščajoče", Toast.LENGTH_SHORT).show();
                 Collections.sort(all.getLokacijaAll(), new Comparator<Lokacija>() {
                     @Override
                     public int compare(Lokacija l1, Lokacija l2) {
                         if (l1.getDate()==l2.getDate()) return 0;
 
-                        if (l1.getDate().compareTo(l2.getDate()) > 0) return -1;
+                        if (l1.getDate().compareTo(l2.getDate()) < 0) return -1;
                         return 1;
                     }
                 });
             }
             break;
             case SORT_BY_DOM:{
-                Toast.makeText(this,"Sortirano po domu", Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(this,"Sortirano po datumu padajoče", Toast.LENGTH_SHORT).show();
                 Collections.sort(all.getLokacijaAll(), new Comparator<Lokacija>() {
                     @Override
                     public int compare(Lokacija l1, Lokacija l2) {
-                        if (l1.getDom()==l2.getDom()) return 0;
-                        //  a.compareTo(another_string) <0
+                        if (l1.getDate()==l2.getDate()) return 0;
 
-                        if (l1.getDom().compareTo(l2.getDom()) > 0) return -1;
+                        if (l1.getDate().compareTo(l2.getDate()) > 0) return -1;
                         return 1;
                     }
                 });
