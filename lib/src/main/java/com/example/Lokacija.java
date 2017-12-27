@@ -15,9 +15,11 @@ public class Lokacija {
     String opis;
     String tipNapake;
     String date;
+    Double smerX;
+    Double smerY;
     public static final String NODATA="_NA";
 
-    public Lokacija(String id, String dom, String soba, String idUser, String date, String opis, String fileName, String tipNapake) {
+    public Lokacija(String id, String dom, String soba, String idUser, String date, String opis, String fileName, String tipNapake, Double napakaX, Double napakaY) {
         if(id==""){
             this.id = UUID.randomUUID().toString().replaceAll("-", "");
         }else{
@@ -30,6 +32,8 @@ public class Lokacija {
         this.opis=opis;
         this.fileName=fileName;
         this.tipNapake=tipNapake;
+        this.smerX=napakaX;
+        this.smerY=napakaY;
     }
 
     @Override
@@ -64,6 +68,14 @@ public class Lokacija {
 
     public String getDom() {
         return dom;
+    }
+
+    public double getX() {
+        return smerX;
+    }
+
+    public double getY() {
+        return smerY;
     }
 
     public String getOpis() {

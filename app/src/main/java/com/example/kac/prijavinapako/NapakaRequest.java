@@ -12,7 +12,7 @@ public class NapakaRequest extends StringRequest {
     private static final String REGISTER_REQUEST_URL = "https://klemenkac.000webhostapp.com/Napaka.php";
     private Map<String, String> params;
 
-    public NapakaRequest(String id, String dom, String soba, String tip_napake, String opis, String user, String slika, Response.Listener<String> listener) {
+    public NapakaRequest(String id, String dom, String soba, String tip_napake, String opis, String user, String slika, Double x, Double y, Response.Listener<String> listener) {
         super(Method.POST, REGISTER_REQUEST_URL, listener, null);
 
         Date cDate = new Date();
@@ -27,6 +27,8 @@ public class NapakaRequest extends StringRequest {
         params.put("user", user);
         params.put("slika", slika);
         params.put("datum", datum);
+        params.put("x", x.toString());
+        params.put("y", y.toString());
     }
 
     @Override

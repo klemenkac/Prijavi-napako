@@ -6,6 +6,7 @@
     <uses-feature android:name="android.hardware.location.gps" />
     <uses-feature android:name="android.hardware.camera2" android:required="true" />
     <uses-feature android:name="android.hardware.nfc" android:required="true" />
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.INTERNET" />
@@ -36,6 +37,8 @@
 
 
         <activity android:name=".ActivityNFCzapis"/>
+        <activity android:name=".NiStreznika"/>
+        <activity android:name=".ActivityMap"/>
         <activity android:name=".ActivityMySettings"/>
         <activity android:name=".ActivityListMain"/>
         <activity android:name=".LoginActivity"

@@ -11,18 +11,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.location.Location;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
-import android.nfc.Tag;
-import android.nfc.tech.Ndef;
-import android.nfc.tech.NdefFormatable;
+import android.nfc.NfcManager;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -30,24 +25,19 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import android.support.design.widget.Snackbar;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.DataAll;
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.karumi.dexter.Dexter;
@@ -57,14 +47,8 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
-import com.example.kac.prijavinapako.eventbus.MessageEventUpdateLocation;
-
-import java.io.ByteArrayOutputStream;
 import java.util.List;
-import java.util.Locale;
 
 public class ActivityListMain extends AppCompatActivity  {
     private RecyclerView mRecyclerView;
@@ -72,6 +56,7 @@ public class ActivityListMain extends AppCompatActivity  {
     private RecyclerView.LayoutManager mLayoutManager;
     ApplicationMy app;
     private FloatingActionButton fab;
+    private FloatingActionButton map;
     private GoogleApiClient googleApiClient;
     NfcAdapter nfcAdapter;
 
@@ -92,7 +77,6 @@ public class ActivityListMain extends AppCompatActivity  {
                 // User chose the "Settings" item, show the app settings UI...
                 startActivity(new Intent(this,ActivityMySettings.class));
                 return true;
-
 
             case R.id.action_odjava:
                 Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
@@ -158,6 +142,18 @@ public class ActivityListMain extends AppCompatActivity  {
                 i.putExtra(DataAll.LOKACIJA_ID, ActivityLocation.NEW_LOCATION_ID);
                 startActivity(i);
                 // }
+            }
+        });
+
+        map = (FloatingActionButton) findViewById(R.id.map);
+        map.setBackgroundColor(getResources().getColor(R.color.colorGray));
+        //fab.set
+        map.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent i = new Intent(getBaseContext(), ActivityMap.class);
+                startActivity(i);
             }
         });
 
@@ -373,14 +369,22 @@ public class ActivityListMain extends AppCompatActivity  {
         super.onResume();
         mAdapter.notifyDataSetChanged();
 
-        enableForegroundFispatchSystem();
+        NfcManager manager = (NfcManager) this.getSystemService(Context.NFC_SERVICE);
+        NfcAdapter adapter = manager.getDefaultAdapter();
+        if (adapter != null && adapter.isEnabled()) {
+            enableForegroundFispatchSystem();
+        }
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        disableForegroundDispatchSystem();
-
+        NfcManager manager = (NfcManager) this.getSystemService(Context.NFC_SERVICE);
+        NfcAdapter adapter = manager.getDefaultAdapter();
+        if (adapter != null && adapter.isEnabled()) {
+            disableForegroundDispatchSystem();
+        }
     }
 
     @Override

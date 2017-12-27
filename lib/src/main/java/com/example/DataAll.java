@@ -16,7 +16,7 @@ import sun.net.www.http.HttpClient;
  */
 
 public class DataAll {
-    public static final String LOKACIJA_ID = "lokacija_idXX";
+    public static final String LOKACIJA_ID = "lokacija_id";
     //http://stackoverflow.com/questions/4772425/change-date-format-in-a-java-string
     private TagList tags;
     private User userMe;
@@ -33,12 +33,12 @@ public class DataAll {
         lokacijaList.add(l);
     }
 
-    public Lokacija addLocation(String id,String dom, String soba, String idUser,String datum, String opis, String im, String tipNapake) {
+    public Lokacija addLocation(String id,String dom, String soba, String idUser,String datum, String opis, String im, String tipNapake, Double smerX, Double smerY) {
 
        /* Date myDate = new Date();
         String datum = new SimpleDateFormat("dd. MM. YYYY").format(myDate);*/
 
-        Lokacija tmp = new Lokacija(id, dom, soba, idUser, datum, opis, im, tipNapake);
+        Lokacija tmp = new Lokacija(id, dom, soba, idUser, datum, opis, im, tipNapake, smerX, smerY);
         lokacijaList.add(tmp);
         return tmp;
 //hello
@@ -117,6 +117,7 @@ public class DataAll {
     }
 
     public List<Lokacija> getLokacijaAll() {
+        //TODO naredi da vedno prebere iz strežnika
         return lokacijaList;
     }
 

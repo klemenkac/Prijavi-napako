@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/login_background"
-    android:theme="@style/AppTheme.NoActionBar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.kac.prijavinapako.ActivityListMain">
@@ -17,8 +16,20 @@
         app:backgroundTint="@color/colorGray"
         app:srcCompat="@android:drawable/ic_input_add" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
+        android:layout_margin="@dimen/fab_margin"
+        app:backgroundTint="@color/colorGray"
+        app:srcCompat="@android:drawable/ic_dialog_map" />
     <include
         android:id="@+id/include"
-        layout="@layout/activity_zacetna_content" />
+        layout="@layout/activity_zacetna_content"
+        app:layout_anchor="@+id/fab"
+        app:layout_anchorGravity="bottom|center" />
+
+
 
 </android.support.design.widget.CoordinatorLayout>

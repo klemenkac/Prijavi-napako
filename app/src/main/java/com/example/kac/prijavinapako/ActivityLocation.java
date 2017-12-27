@@ -3,14 +3,18 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
@@ -58,7 +62,6 @@ import static com.example.kac.prijavinapako.R.id.txtSoba;
 
 public class ActivityLocation extends AppCompatActivity {
 
-    // private DropboxAPI dropboxAPI;
     private boolean isUserLoggedIn;
     public String encodedImage;
 
@@ -73,10 +76,18 @@ public class ActivityLocation extends AppCompatActivity {
     Lokacija l;
     LokacijaTag lt;
     String ID;
+    Double latti;
+    Double longi;
     PermissionGranted permissionGranted;
     MagicalCamera magicalCamera;
     boolean stateNew;
     private int RESIZE_PHOTO_PIXELS_PERCENTAGE = 10;
+
+    static final int REQUEST_LOCATION = 1;
+    LocationManager locationManager;
+
+
+
     public static String NEW_LOCATION_ID="NEW_LOCATION";
 
     String [] DOMOVILIST = {"Dom 1", "Dom 2", "Dom 3", "Dom 4", "Dom 5", "Dom 6",
@@ -109,6 +120,9 @@ public class ActivityLocation extends AppCompatActivity {
         stateNew = false;
         stanovalec.setVisibility(View.INVISIBLE);
 
+        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        getLocation();
+        
         permissionGranted = new PermissionGranted(this);
 
         if (android.os.Build.VERSION.SDK_INT >= 20) {
@@ -124,6 +138,29 @@ public class ActivityLocation extends AppCompatActivity {
 
     }
 
+    private void getLocation() {
+
+        if(ActivityCompat.checkSelfPermission(this, "android.permission.ACCESS_FINE_LOCATION")
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, "android.permission.ACCESS_COARSE_LOCATION")
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{"android.permission.ACCESS_FINE_LOCATION"}, REQUEST_LOCATION);
+
+        } else {
+            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+            if (location != null){
+                latti = location.getLatitude();
+                longi = location.getLongitude();
+
+                //Toast.makeText(this, String.valueOf(latti)+", "+String.valueOf(longi), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+
+
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode,permissions,grantResults);
@@ -132,6 +169,7 @@ public class ActivityLocation extends AppCompatActivity {
         }
         //CALL THIS METHOD EVER IN THIS OVERRIDE FOR ACTIVATE PERMISSIONS
         magicalCamera.permissionGrant(requestCode, permissions, grantResults);
+
     }
 
 
@@ -147,13 +185,12 @@ public class ActivityLocation extends AppCompatActivity {
         path = magicalCamera.savePhotoInMemoryDevice(magicalCamera.getPhoto(),"myPhotoName",  true);
 
         if(path != null){
-
             Date cDate = new Date();
             String datum = new SimpleDateFormat("dd. MM. yyyy").format(cDate);
 
-            l = new Lokacija("","", "", app.getAll().getUserMe().getIdUser(),datum,"",path,"");
+            l = new Lokacija("","", "", app.getAll().getUserMe().getIdUser(),datum,"",path,"",0.0,0.0);
             update(l);
-            //Toast.makeText(this, "The photo is save in device, please check this path: " + path, Toast.LENGTH_SHORT).show();
+
         }else{
             Toast.makeText(this, "Sorry your photo dont write in devide, please contact with fabian7593@gmail and say this error", Toast.LENGTH_SHORT).show();
         }
@@ -356,19 +393,15 @@ public class ActivityLocation extends AppCompatActivity {
 
 
             if(path!=null){
-
-
-
                 Bitmap bm = BitmapFactory.decodeFile(path);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
                 byte[] b = baos.toByteArray();
 
                 encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
-
             }
 
-            NapakaRequest napakaRequest = new NapakaRequest(ajdi, dom, soba, tip_napake, opis, juzer,encodedImage, responseListener);
+            NapakaRequest napakaRequest = new NapakaRequest(ajdi, dom, soba, tip_napake, opis, juzer,encodedImage,latti,longi, responseListener);
             RequestQueue queue = Volley.newRequestQueue(ActivityLocation.this);
             queue.add(napakaRequest);
         }

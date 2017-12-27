@@ -200,7 +200,13 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return all.getLocationSize();
+        try{
+            return all.getLocationSize();
+        }
+        catch (Exception e){
+            return 0;
+        }
+
     }
 
 
