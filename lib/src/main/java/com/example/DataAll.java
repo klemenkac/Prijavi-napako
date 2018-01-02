@@ -44,6 +44,7 @@ public class DataAll {
 //hello
     }
 
+
     public User getUserMe() {
         return userMe;
     }
@@ -102,6 +103,7 @@ public class DataAll {
     public void addLokacija(Lokacija l) {
         lokacijaList.add(l);
 
+
     }
 
     public Lokacija getLocation(int i) {
@@ -117,7 +119,6 @@ public class DataAll {
     }
 
     public List<Lokacija> getLokacijaAll() {
-        //TODO naredi da vedno prebere iz strežnika
         return lokacijaList;
     }
 

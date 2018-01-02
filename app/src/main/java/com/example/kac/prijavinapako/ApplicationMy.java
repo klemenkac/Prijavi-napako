@@ -56,7 +56,7 @@ public class ApplicationMy extends Application {
     String line=null;
     String result=null;
     String[] data;
-
+    City city;
     private TagList tags;
     public static SharedPreferences preferences;
     private Location mLastLocation;
@@ -73,8 +73,6 @@ public class ApplicationMy extends Application {
         /*
         if (!load()){
             StrictMode.setThreadPolicy((new StrictMode.ThreadPolicy.Builder().permitNetwork().build()));
-
-
         }*/
     }
 
@@ -142,12 +140,34 @@ public class ApplicationMy extends Application {
                     smerX = jo.getDouble("x");
                     smerY = jo.getDouble("y");
 
+                    city = new City(smerX, smerY,dataDom,dataId);
+                    TourManager.addCity(city);
+
                     da.addLocation(dataId, dataDom, dataSoba, dataUser, dataDatum, dataOpis, dataSlika, dataTip, smerX, smerY);
                 }
 
 
             }
-//            Toast.makeText(getApplicationContext(), data[0].toString(), Toast.LENGTH_SHORT).show();
+            // Initialize population
+            Population pop = new Population(50, true);
+            System.out.println("Initial distance: " + pop.getFittest().getDistance());
+
+            // Evolve population for 100 generations
+            pop = GA.evolvePopulation(pop);
+            for (int i = 0; i < 100; i++) {
+                pop = GA.evolvePopulation(pop);
+            }
+
+            // Print final results
+            /*System.out.println("Finished");
+            System.out.println("Final distance: " + pop.getFittest().getDistance());
+            System.out.println("Solution:");
+            System.out.println(pop.getFittest());*/
+
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putString("pot", pop.getFittest().toString());
+
+            editor.commit();
             all = da;
         }catch (Exception e){
             //Toast.makeText(getApplicationContext(), "Website is probably sleeping.", Toast.LENGTH_SHORT).show();

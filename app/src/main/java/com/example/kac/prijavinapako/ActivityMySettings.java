@@ -1,5 +1,6 @@
 package com.example.kac.prijavinapako;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -25,7 +26,11 @@ public class ActivityMySettings extends AppCompatPreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
             getFragmentManager().beginTransaction().replace(android.R.id.content,  new PrefsFragment()).commit();
-//        }
+
+        SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
+
+        String ime=sharedpreferences.getString("name",null);
+
 
 
     }

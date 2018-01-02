@@ -45,6 +45,9 @@ import java.util.Date;
 
 import com.frosquivel.magicalcamera.MagicalCamera;
 import com.frosquivel.magicalcamera.Functionallities.PermissionGranted;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.squareup.picasso.Picasso;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
@@ -76,15 +79,17 @@ public class ActivityLocation extends AppCompatActivity {
     Lokacija l;
     LokacijaTag lt;
     String ID;
-    Double latti;
-    Double longi;
+    double latti=0.0;
+    double longi=0.0;
+
+    private FusedLocationProviderClient mFusedLocationClient;
+
     PermissionGranted permissionGranted;
     MagicalCamera magicalCamera;
     boolean stateNew;
     private int RESIZE_PHOTO_PIXELS_PERCENTAGE = 10;
 
     static final int REQUEST_LOCATION = 1;
-    LocationManager locationManager;
 
 
 
@@ -101,6 +106,7 @@ public class ActivityLocation extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
 
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         ArrayAdapter<String> arrayAdapterDom = new ArrayAdapter<String>(this,
                 android.R.layout.simple_dropdown_item_1line,DOMOVILIST);
         MaterialBetterSpinner domSpinner = (MaterialBetterSpinner)findViewById(spinnerDom);
@@ -120,9 +126,6 @@ public class ActivityLocation extends AppCompatActivity {
         stateNew = false;
         stanovalec.setVisibility(View.INVISIBLE);
 
-        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        getLocation();
-        
         permissionGranted = new PermissionGranted(this);
 
         if (android.os.Build.VERSION.SDK_INT >= 20) {
@@ -136,30 +139,20 @@ public class ActivityLocation extends AppCompatActivity {
 
         ID="";
 
-    }
-
-    private void getLocation() {
-
-        if(ActivityCompat.checkSelfPermission(this, "android.permission.ACCESS_FINE_LOCATION")
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, "android.permission.ACCESS_COARSE_LOCATION")
-                != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this, new String[]{"android.permission.ACCESS_FINE_LOCATION"}, REQUEST_LOCATION);
-
-        } else {
-            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-            if (location != null){
-                latti = location.getLatitude();
-                longi = location.getLongitude();
-
-                //Toast.makeText(this, String.valueOf(latti)+", "+String.valueOf(longi), Toast.LENGTH_SHORT).show();
-            }
-        }
-
-
+        mFusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            latti=location.getLatitude();
+                            longi=location.getLongitude();
+                        }
+                    }
+                });
 
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -400,6 +393,7 @@ public class ActivityLocation extends AppCompatActivity {
 
                 encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
             }
+
 
             NapakaRequest napakaRequest = new NapakaRequest(ajdi, dom, soba, tip_napake, opis, juzer,encodedImage,latti,longi, responseListener);
             RequestQueue queue = Volley.newRequestQueue(ActivityLocation.this);

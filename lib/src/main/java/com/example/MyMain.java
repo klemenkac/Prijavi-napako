@@ -11,5 +11,6 @@ public class MyMain {
         TagList l = new TagList();
         DataAll dataAll = DataAll.scenarijA("");
         System.out.println(dataAll);
+        System.out.println();
     }
 }

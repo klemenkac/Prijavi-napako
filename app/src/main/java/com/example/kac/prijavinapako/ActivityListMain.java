@@ -172,7 +172,11 @@ public class ActivityListMain extends AppCompatActivity  {
                 .build();
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        if (nfcAdapter == null || !nfcAdapter.isEnabled()) {
+            Toast.makeText(ActivityListMain.this, "Nekaj je šlo narobe." , Toast.LENGTH_SHORT).show();
+        }
     }
+
 
 
     @Override
@@ -189,8 +193,6 @@ public class ActivityListMain extends AppCompatActivity  {
                 }else{
                     Toast.makeText(this,"No NDEF messages found!",Toast.LENGTH_LONG).show();
                 }
-
-
         }
     }
 
@@ -205,6 +207,14 @@ public class ActivityListMain extends AppCompatActivity  {
 
             //Tukaj berem
 
+            if(tagContent.toString()!=null){
+                Intent i = new Intent(getBaseContext(), ActivityLocation.class);
+                i.putExtra(DataAll.LOKACIJA_ID, ActivityLocation.NEW_LOCATION_ID);
+                i.putExtra("Vpisna", tagContent);
+                startActivity(i);
+            }
+
+            /*
             if(tagContent.toString().equals("E1091722")){
                 Intent i = new Intent(getBaseContext(), ActivityLocation.class);
                 i.putExtra(DataAll.LOKACIJA_ID, ActivityLocation.NEW_LOCATION_ID);
@@ -216,7 +226,7 @@ public class ActivityListMain extends AppCompatActivity  {
                 i.putExtra(DataAll.LOKACIJA_ID, ActivityLocation.NEW_LOCATION_ID);
                 i.putExtra("Vpisna", "E123567");
                 startActivity(i);
-            }
+            }*/
             //Toast.makeText(this,tagContent.toString(),Toast.LENGTH_LONG).show();
 
         }else{
@@ -321,8 +331,6 @@ public class ActivityListMain extends AppCompatActivity  {
 
 
     }
-
-
 
     private void goLogInScreen() {
         SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);

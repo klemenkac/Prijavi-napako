@@ -21,15 +21,6 @@ import com.example.kac.prijavinapako.eventbus.MessageEventUpdateLocation;
 //http://stackoverflow.com/questions/28535703/best-way-to-get-user-gps-location-in-background-in-android
 public class GPSTracker extends Service {
 
- /*
-   use EventBus
-    public static final String GPSTrackerEvent="MyGPSTrackerEvent";
-    public static final String GPSTrackerKeyLocation="MyGPSTrackerEventLOCATION";
-    public static final String GPSTrackerSettingEvent="GPSTrackerSettingEvent";
-    public static final String GPSTrackerSettingrKey="GPSTrackerSettingrKey";
-*/
-
-
     private static final String TAG = GPSTracker.class.getSimpleName();
     private LocationManager mLocationManager = null;
     private static int LOCATION_INTERVAL = 1000; //1000ms = 1s
@@ -48,7 +39,6 @@ public class GPSTracker extends Service {
             Log.i(TAG, "LocationListener " + provider);
             mLastLocation = new Location(provider);
             isOK = true;
-//            sendBroadcastMessage();
         }
 
         @Override

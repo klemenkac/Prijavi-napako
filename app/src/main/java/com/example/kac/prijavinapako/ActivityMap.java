@@ -2,12 +2,14 @@ package com.example.kac.prijavinapako;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.DataAll;
 import com.example.Lokacija;
@@ -86,7 +88,13 @@ public class ActivityMap extends AppCompatActivity {
         mMapView.getOverlays().add(mMyLocationOverlay);
         app = (ApplicationMy) getApplication();
 
+        SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
+        String potka=sharedpreferences.getString("pot",null);
+
+        Toast.makeText(this, potka , Toast.LENGTH_LONG).show();
+
     }
+
 
     void setLokacija(String ID) {
         l = app.getLocationByID(ID);

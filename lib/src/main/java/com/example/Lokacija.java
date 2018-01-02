@@ -17,6 +17,7 @@ public class Lokacija {
     String date;
     Double smerX;
     Double smerY;
+
     public static final String NODATA="_NA";
 
     public Lokacija(String id, String dom, String soba, String idUser, String date, String opis, String fileName, String tipNapake, Double napakaX, Double napakaY) {
