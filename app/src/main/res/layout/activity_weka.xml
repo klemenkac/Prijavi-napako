@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context="com.example.kac.prijavinapako.ActivityWeka">
+
+    <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+        android:id='@+id/sDan'
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:textSize="22sp"
+        android:hint="Izberi dan napake"
+        android:textColor="@color/colorWhiteTrans"
+        android:textColorHint="@color/colorWhiteTrans"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
+
+    <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+        android:id='@+id/sKraj'
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="Izberi kraj napake"
+        android:textColor="@color/colorWhiteTrans"
+        android:textColorHint="@color/colorWhiteTrans"
+        android:textSize="22sp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sDan" />
+
+    <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+        android:id='@+id/sDom'
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:textSize="22sp"
+        android:hint="Izberi študentski dom"
+        android:textColor="@color/colorWhiteTrans"
+        android:textColorHint="@color/colorWhiteTrans"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sKraj" />
+
+    <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+        android:id='@+id/sNadstropje'
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="Izberi nadstropje"
+        android:textSize="22sp"
+        android:textColor="@color/colorWhiteTrans"
+        android:textColorHint="@color/colorWhiteTrans"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sDom" />
+
+    <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+        android:id='@+id/sKrivda'
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:textSize="22sp"
+        android:hint="Lastna krivda"
+        android:textColor="@color/colorWhiteTrans"
+        android:textColorHint="@color/colorWhiteTrans"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sNadstropje" />
+
+    <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+        android:id='@+id/sNujnost'
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="Nujnost"
+        android:textSize="22sp"
+        android:textColor="@color/colorWhiteTrans"
+        android:textColorHint="@color/colorWhiteTrans"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sKrivda" />
+
+    <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+        android:id='@+id/sKlasifi'
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="Klasifikator"
+        android:textColor="@color/colorWhiteTrans"
+        android:textColorHint="@color/colorWhiteTrans"
+        android:textSize="22sp"
+        app:layout_constraintHorizontal_bias="0.039"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sNujnost" />
+
+    <Button
+        android:id="@+id/racunaj"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="Izračunaj"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sKlasifi" />
+
+</android.support.constraint.ConstraintLayout>

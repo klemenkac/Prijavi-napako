@@ -35,8 +35,11 @@
 
         </activity>
 
-
+        <activity android:name=".ActivityWeka"/>
         <activity android:name=".ActivityNFCzapis"/>
+        <activity android:name=".ActivityIntro"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="landscape"/>
         <activity android:name=".NiStreznika"/>
         <activity android:name=".ActivityMap"/>
         <activity android:name=".ActivityMySettings"/>
@@ -49,7 +52,6 @@
         <activity android:name=".ActivityLocation"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan"/>
-
 
     </application>
 

@@ -36,6 +36,17 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
+        String ime=sharedpreferences.getString("prvaprijava",null);
+
+        if(ime==null){
+            Intent intent = new Intent(this, ActivityIntro.class);
+            startActivity(intent);
+
+
+        }
+
+
         app = (ApplicationMy) getApplication();
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -47,8 +58,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         editor.putString("name", "");
 
         editor.commit();*/
-
-        SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
 
 
         if(sharedpreferences.getString("name",null)!="" && sharedpreferences.getString("name",null)!=null){

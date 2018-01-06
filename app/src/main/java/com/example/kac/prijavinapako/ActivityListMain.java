@@ -78,6 +78,17 @@ public class ActivityListMain extends AppCompatActivity  {
                 startActivity(new Intent(this,ActivityMySettings.class));
                 return true;
 
+            case R.id.action_Weka:
+                // User chose the "Settings" item, show the app settings UI...
+                startActivity(new Intent(this,ActivityWeka.class));
+                return true;
+
+
+            case R.id.action_Intro:
+                // User chose the "Settings" item, show the app settings UI...
+                startActivity(new Intent(this,ActivityIntro.class));
+                return true;
+
             case R.id.action_odjava:
                 Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
                     @Override
@@ -173,7 +184,7 @@ public class ActivityListMain extends AppCompatActivity  {
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (nfcAdapter == null || !nfcAdapter.isEnabled()) {
-            Toast.makeText(ActivityListMain.this, "Nekaj je šlo narobe." , Toast.LENGTH_SHORT).show();
+            Toast.makeText(ActivityListMain.this, "NFC ni prisoten!" , Toast.LENGTH_SHORT).show();
         }
     }
 

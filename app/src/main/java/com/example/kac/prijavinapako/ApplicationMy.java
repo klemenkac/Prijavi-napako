@@ -9,7 +9,6 @@ import com.example.TagList;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.StrictMode;
@@ -35,6 +34,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.example.kac.prijavinapako.Trgovski_potnik.City;
+import com.example.kac.prijavinapako.Trgovski_potnik.GA;
+import com.example.kac.prijavinapako.Trgovski_potnik.TourManager;
 import com.example.kac.prijavinapako.eventbus.MessageEventUpdateLocation;
 /**
  * Created by xklem on 13. 03. 2017.
@@ -55,26 +57,22 @@ public class ApplicationMy extends Application {
     InputStream is=null;
     String line=null;
     String result=null;
-    String[] data;
+    private Location mLastLocation;
     City city;
     private TagList tags;
     public static SharedPreferences preferences;
-    private Location mLastLocation;
+
     @Override
     public void onCreate() {
-
         super.onCreate();
         tags = new TagList(); //also sets default tags
         EventBus.getDefault().register(this);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mLastLocation=null;
         StrictMode.setThreadPolicy((new StrictMode.ThreadPolicy.Builder().permitNetwork().build()));
         getData();
-        /*
-        if (!load()){
-            StrictMode.setThreadPolicy((new StrictMode.ThreadPolicy.Builder().permitNetwork().build()));
-        }*/
+        mLastLocation=null;
     }
+
 
     private void getData() {
         //Toast.makeText(getApplicationContext(), "Pridobivam podatke...", Toast.LENGTH_SHORT).show();
@@ -181,11 +179,9 @@ public class ApplicationMy extends Application {
         Log.i("ApplicationMy","MessageEventUpdateLocation ");
         mLastLocation = event.getM();
     }
-    @Override
-    public void onTerminate() {
-        EventBus.getDefault().unregister(this);
-        super.onTerminate();
 
+    public Location getLastLocation() {
+        return mLastLocation;
     }
 
     public void setLastLocation(Location mLastLocation) {
@@ -196,9 +192,14 @@ public class ApplicationMy extends Application {
         return true;
     }
 
-    public Location getLastLocation() {
-        return mLastLocation;
+    @Override
+    public void onTerminate() {
+        EventBus.getDefault().unregister(this);
+        super.onTerminate();
+
     }
+
+
 
     public DataAll getAll() {
         return  all;

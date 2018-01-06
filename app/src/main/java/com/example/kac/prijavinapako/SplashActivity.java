@@ -1,7 +1,9 @@
 package com.example.kac.prijavinapako;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
@@ -34,22 +36,22 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
 
-                    try {
-                        JSONObject jsonResponse = new JSONObject(response);
-                        boolean success = jsonResponse.getBoolean("success");
-                        if (success) {
-                            Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            Intent intent = new Intent(SplashActivity.this, NiStreznika.class);
-                            startActivity(intent);
-                        }
-                    } catch (JSONException e) {
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    boolean success = jsonResponse.getBoolean("success");
+                    if (success) {
+                        Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
                         Intent intent = new Intent(SplashActivity.this, NiStreznika.class);
                         startActivity(intent);
-                        e.printStackTrace();
                     }
+                } catch (JSONException e) {
+                    Intent intent = new Intent(SplashActivity.this, NiStreznika.class);
+                    startActivity(intent);
+                    e.printStackTrace();
+                }
             }
         };
 

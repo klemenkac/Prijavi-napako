@@ -14,7 +14,15 @@
         app:showAsAction="never"/>
 
     <item android:id="@+id/action_NFCzapis"
-        android:title="NFC pisanje/branje"
+    android:title="NFC pisanje/branje"
+    app:showAsAction="never"/>
+
+    <item android:id="@+id/action_Weka"
+        android:title="Weka projekt"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/action_Intro"
+        android:title="Intro video"
         app:showAsAction="never"/>
 
     <item android:id="@+id/action_odjava"

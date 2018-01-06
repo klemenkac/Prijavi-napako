@@ -43,6 +43,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.example.kac.prijavinapako.eventbus.MessageEventUpdateLocation;
 import com.frosquivel.magicalcamera.MagicalCamera;
 import com.frosquivel.magicalcamera.Functionallities.PermissionGranted;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -51,6 +52,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.squareup.picasso.Picasso;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -75,15 +77,10 @@ public class ActivityLocation extends AppCompatActivity {
     TextView tvDatum;
     String path;
     TextView stanovalec;
-    Button save;
     Lokacija l;
-    LokacijaTag lt;
     String ID;
-    double latti=0.0;
-    double longi=0.0;
-
-    private FusedLocationProviderClient mFusedLocationClient;
-
+    double latti;
+    double longi;
     PermissionGranted permissionGranted;
     MagicalCamera magicalCamera;
     boolean stateNew;
@@ -101,12 +98,14 @@ public class ActivityLocation extends AppCompatActivity {
 
     String [] TIPLIST = {"Elektro","Oprema","Vodovod","Ogrevanje","Internet","Požarne naprave","Drugo"};
 
+    private FusedLocationProviderClient mFusedLocationClient;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         ArrayAdapter<String> arrayAdapterDom = new ArrayAdapter<String>(this,
                 android.R.layout.simple_dropdown_item_1line,DOMOVILIST);
         MaterialBetterSpinner domSpinner = (MaterialBetterSpinner)findViewById(spinnerDom);
@@ -139,18 +138,25 @@ public class ActivityLocation extends AppCompatActivity {
 
         ID="";
 
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mFusedLocationClient.getLastLocation()
                 .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
+                            String total2 = String.valueOf(location.getLatitude());
+                            Log.i("tag",total2);
                             latti=location.getLatitude();
                             longi=location.getLongitude();
                         }
+                        else{
+                            latti=0.0;
+                            longi=0.0;
+                        }
                     }
                 });
-
     }
 
 
@@ -211,6 +217,7 @@ public class ActivityLocation extends AppCompatActivity {
         } else {
             System.out.println("Nič ni v extras!");
         }
+
 
     }
 
@@ -394,10 +401,12 @@ public class ActivityLocation extends AppCompatActivity {
                 encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
             }
 
+            
+                NapakaRequest napakaRequest = new NapakaRequest(ajdi, dom, soba, tip_napake, opis, juzer,encodedImage,latti,longi, responseListener);
+                RequestQueue queue = Volley.newRequestQueue(ActivityLocation.this);
+                queue.add(napakaRequest);
 
-            NapakaRequest napakaRequest = new NapakaRequest(ajdi, dom, soba, tip_napake, opis, juzer,encodedImage,latti,longi, responseListener);
-            RequestQueue queue = Volley.newRequestQueue(ActivityLocation.this);
-            queue.add(napakaRequest);
+
         }
 
 

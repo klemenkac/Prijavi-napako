@@ -1,5 +1,7 @@
 package com.example.kac.prijavinapako;
 
+import com.example.kac.prijavinapako.Trgovski_potnik.Tour;
+
 /**
  * Created by Klemen on 2. 01. 2018.
  */

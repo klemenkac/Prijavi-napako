@@ -1,0 +1,119 @@
+% 1. Title: Prijavi napako ARFF file
+% 
+% 2. Sources:
+%      (a) Creator: Klemen Andrejc Kac
+%      (b) Mentor: asist. Bojan Žlahtič
+%      (c) Date: December, 2017
+% 
+@RELATION napake
+
+@ATTRIBUTE 'Dan napake' {ponedeljek,torek,sreda,cetrtek,petek,sobota,nedelja}
+@ATTRIBUTE 'Kraj' {Maribor,Ljubljana,Koper}
+@ATTRIBUTE 'Studentski dom' {1,2,3,4,5,6,7,8,9,10,11,12,13}
+@ATTRIBUTE 'Nadstropje' {prvo,drugo,tretje,cetrto,peto,sesto}
+@ATTRIBUTE 'Lastna krivda' {da, ne}
+@ATTRIBUTE 'Nujnost' {urgentno,navadno}
+@ATTRIBUTE Class {elektro,oprema,vodovod,internet}
+
+@DATA 
+ponedeljek,Maribor,1,prvo,ne,navadno,elektro
+sreda,Ljubljana,6,peto,da,navadno,internet
+cetrtek,Maribor,5,cetrto,ne,urgentno,vodovod
+cetrtek,Koper,8,peto,ne,navadno,vodovod
+ponedeljek,Maribor,4,prvo,ne,navadno,elektro
+ponedeljek,Maribor,4,tretje,ne,navadno,elektro
+sreda,Koper,7,cetrto,ne,navadno,elektro
+sreda,Ljubljana,10,prvo,ne,navadno,elektro
+petek,Maribor,11,cetrto,ne,urgentno,vodovod
+ponedeljek,Koper,2,drugo,ne,navadno,oprema
+sreda,Ljubljana,3,tretje,ne,navadno,oprema
+torek,Ljubljana,9,cetrto,ne,navadno,internet
+sreda,Maribor,12,drugo,da,navadno,oprema
+sreda,Ljubljana,13,peto,ne,navadno,oprema
+ponedeljek,Maribor,4,tretje,ne,navadno,elektro
+sobota,Koper,1,tretje,ne,navadno,elektro
+sreda,Koper,8,cetrto,ne,urgentno,vodovod
+ponedeljek,Maribor,7,drugo,ne,navadno,elektro
+petek,Ljubljana,2,peto,da,navadno,oprema
+sreda,Maribor,12,tretje,ne,navadno,oprema
+sreda,Maribor,3,tretje,ne,navadno,oprema
+cetrtek,Ljubljana,11,drugo,ne,urgentno,vodovod
+torek,Maribor,9,drugo,ne,navadno,internet
+sreda,Koper,13,tretje,ne,navadno,oprema
+torek,Maribor,6,cetrto,ne,navadno,internet
+sreda,Koper,13,tretje,ne,navadno,oprema
+ponedeljek,Koper,1,tretje,ne,navadno,elektro
+ponedeljek,Maribor,7,drugo,ne,navadno,elektro
+cetrtek,Ljubljana,12,cetrto,da,navadno,oprema
+ponedeljek,Koper,10,sesto,ne,navadno,elektro
+torek,Maribor,6,prvo,ne,urgentno,internet
+sreda,Maribor,3,drugo,ne,navadno,oprema
+petek,Koper,10,prvo,ne,navadno,elektro
+sobota,Ljubljana,2,tretje,ne,navadno,oprema
+sreda,Koper,2,tretje,ne,navadno,oprema
+torek,Ljubljana,3,drugo,ne,navadno,internet
+cetrtek,Ljubljana,8,peto,ne,navadno,vodovod
+torek,Maribor,6,tretje,ne,navadno,internet
+ponedeljek,Koper,3,drugo,ne,navadno,oprema
+sreda,Maribor,12,cetrto,da,navadno,oprema
+sreda,Maribor,9,prvo,ne,navadno,internet
+torek,Ljubljana,9,prvo,ne,navadno,internet
+cetrtek,Koper,4,cetrto,ne,navadno,elektro
+petek,Maribor,1,tretje,ne,navadno,elektro
+petek,Maribor,11,cetrto,ne,navadno,vodovod
+cetrtek,Maribor,5,peto,ne,urgentno,vodovod
+nedelja,Ljubljana,13,tretje,da,navadno,oprema
+nedelja,Maribor,7,prvo,ne,navadno,elektro
+ponedeljek,Koper,10,prvo,ne,navadno,elektro
+sobota,Koper,4,drugo,ne,navadno,elektro
+nedelja,Ljubljana,3,cetrto,ne,navadno,oprema
+petek,Maribor,8,prvo,ne,urgentno,vodovod
+cetrtek,Maribor,5,peto,ne,navadno,vodovod
+petek,Koper,10,cetrto,da,navadno,internet
+torek,Maribor,6,tretje,ne,navadno,internet
+torek,Ljubljana,8,prvo,ne,navadno,internet
+ponedeljek,Koper,12,prvo,ne,navadno,oprema
+ponedeljek,Maribor,6,drugo,ne,navadno,internet
+cetrtek,Ljubljana,11,tretje,ne,navadno,vodovod
+ponedeljek,Maribor,4,prvo,ne,navadno,elektro
+sreda,Maribor,11,cetrto,ne,urgentno,vodovod
+torek,Ljubljana,5,cetrto,ne,navadno,internet
+sreda,Koper,2,cetrto,da,navadno,oprema
+petek,Ljubljana,13,prvo,da,navadno,oprema
+torek,Koper,9,prvo,ne,navadno,internet
+ponedeljek,Maribor,10,drugo,ne,navadno,elektro
+nedelja,Ljubljana,10,cetrto,ne,navadno,elektro
+torek,Maribor,7,prvo,ne,navadno,internet
+ponedeljek,Ljubljana,8,sesto,ne,navadno,vodovod
+sreda,Koper,13,drugo,ne,navadno,oprema
+cetrtek,Ljubljana,9,peto,ne,urgentno,vodovod
+petek,Maribor,6,prvo,ne,navadno,internet
+ponedeljek,Maribor,4,tretje,ne,navadno,elektro
+torek,Koper,1,prvo,ne,navadno,elektro
+torek,Ljubljana,9,drugo,ne,navadno,elektro
+nedelja,Maribor,3,drugo,ne,navadno,oprema
+cetrtek,Koper,5,drugo,ne,navadno,vodovod
+petek,Maribor,12,drugo,da,navadno,oprema
+torek,Ljubljana,11,prvo,ne,navadno,internet
+ponedeljek,Ljubljana,4,cetrto,ne,navadno,elektro
+cetrtek,Ljubljana,8,peto,ne,navadno,vodovod
+sreda,Koper,2,peto,ne,urgentno,oprema
+torek,Maribor,2,cetrto,ne,navadno,oprema
+sreda,Maribor,13,tretje,ne,navadno,oprema
+sreda,Ljubljana,7,drugo,da,navadno,elektro
+torek,Koper,3,tretje,ne,navadno,oprema
+ponedeljek,Maribor,4,drugo,ne,navadno,elektro
+ponedeljek,Maribor,1,cetrto,ne,navadno,elektro
+torek,Ljubljana,9,cetrto,ne,navadno,internet
+torek,Koper,11,peto,ne,navadno,internet
+cetrtek,Koper,12,sesto,ne,navadno,oprema
+ponedeljek,Koper,4,drugo,ne,urgentno,internet
+ponedeljek,Ljubljana,9,prvo,ne,navadno,internet
+petek,Koper,4,drugo,ne,navadno,elektro
+sreda,Ljubljana,8,tretje,ne,navadno,internet
+torek,Ljubljana,2,cetrto,da,navadno,internet
+torek,Maribor,7,cetrto,ne,navadno,elektro
+sreda,Ljubljana,6,peto,ne,navadno,oprema
+sreda,Koper,12,drugo,ne,navadno,oprema
+torek,Koper,11,cetrto,ne,navadno,internet
+cetrtek,Ljubljana,11,cetrto,ne,urgentno,vodovod
