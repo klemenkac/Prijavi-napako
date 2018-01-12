@@ -9,8 +9,11 @@ import com.example.TagList;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.os.AsyncTask;
+import android.os.Debug;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -42,7 +45,7 @@ import com.example.kac.prijavinapako.eventbus.MessageEventUpdateLocation;
  * Created by xklem on 13. 03. 2017.
  */
 
-public class ApplicationMy extends Application {
+public class ApplicationMy extends Application{
     int x;
     DataAll all;
     private static final String DATA_MAP = "napakadatamap";
@@ -52,126 +55,163 @@ public class ApplicationMy extends Application {
     private static final int SORT_BY_DOM=0;
     int sortType = SORT_BY_DATE;
 
-    ArrayAdapter<String> adapter;
     String address="https://klemenkac.000webhostapp.com/GetNapaka.php";
     InputStream is=null;
     String line=null;
     String result=null;
     private Location mLastLocation;
-    City city;
+    Integer vse;
     private TagList tags;
     public static SharedPreferences preferences;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
         tags = new TagList(); //also sets default tags
         EventBus.getDefault().register(this);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         StrictMode.setThreadPolicy((new StrictMode.ThreadPolicy.Builder().permitNetwork().build()));
+
+        SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
+        String ime=sharedpreferences.getString("name",null);
+
+        if(ime!=null && ime.equals("v")){
+            //getData(1);
+            vse=1;
+        }
+        else{
+            //getData(0);
+            vse=0;
+        }
         getData();
+
         mLastLocation=null;
     }
 
+    public void getData() {
 
-    private void getData() {
-        //Toast.makeText(getApplicationContext(), "Pridobivam podatke...", Toast.LENGTH_SHORT).show();
+        class DownloadFilesTask extends AsyncTask<Void, Void, DataAll> {
 
-        try{
-            URL url = new URL(address);
-            HttpURLConnection con =(HttpURLConnection) url.openConnection();
-
-            con.setRequestMethod("GET");
-
-            is=new BufferedInputStream(con.getInputStream());
-        }catch(Exception e){
-
-
-            //Toast.makeText(getApplicationContext(), "Freehosting ne dela! 1h na dan je nedosegljiv. Poskusi znova čez 1h.", Toast.LENGTH_SHORT).show();
-
-            e.printStackTrace();
-        }
-
-        try{
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            StringBuilder sb = new StringBuilder();
-
-            while((line=br.readLine()) != null){
-                sb.append(line+"\n");
+            @Override
+            protected void onPreExecute() {
+                // TODO Auto-generated method stub
+                /**
+                 * show dialog
+                 */
+                super.onPreExecute();
+                System.out.println("Tukaj1");
             }
-            is.close();
-            result=sb.toString();
-        }catch (Exception e){
 
-            e.printStackTrace();
-        }
+            @Override
+            protected DataAll doInBackground(Void... params) {
+                System.out.println("Tukaj2");
+                try{
+                    URL url = new URL(address);
+                    HttpURLConnection con =(HttpURLConnection) url.openConnection();
 
-        //PARSE JSON DATA
-        try{
-            JSONArray ja = new JSONArray(result);
-            JSONObject jo = null;
-            String dataId;
-            String dataDom;
-            String dataSoba;
-            String dataOpis;
-            String dataUser;
-            String dataTip;
-            String dataSlika;
-            String dataDatum;
-            Double smerX;
-            Double smerY;
+                    con.setRequestMethod("GET");
 
-            DataAll da = new DataAll();
-            SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
-            String ime=sharedpreferences.getString("name",null);
-            for(int i=0;i<ja.length();i++){
-                jo = ja.getJSONObject(i);
-                if(jo.getString("user").equals(ime)) {
-                    dataId = jo.getString("id");
-                    dataDom = jo.getString("dom");
-                    dataSoba = jo.getString("soba");
-                    dataOpis = jo.getString("opis");
-                    dataUser = jo.getString("user");
-                    dataTip = jo.getString("tip_napake");
-                    dataDatum = jo.getString("datum");
-                    dataSlika = jo.getString("slika");
-                    smerX = jo.getDouble("x");
-                    smerY = jo.getDouble("y");
-
-                    city = new City(smerX, smerY,dataDom,dataId);
-                    TourManager.addCity(city);
-
-                    da.addLocation(dataId, dataDom, dataSoba, dataUser, dataDatum, dataOpis, dataSlika, dataTip, smerX, smerY);
+                    is=new BufferedInputStream(con.getInputStream());
+                }catch(Exception e){
+                    System.out.println("Napaka1");
                 }
 
+                try{
+                    BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                    StringBuilder sb = new StringBuilder();
 
+                    while((line=br.readLine()) != null){
+                        sb.append(line+"\n");
+                    }
+                    is.close();
+
+
+                    result=sb.toString();
+
+                }catch (Exception e){
+                    System.out.println("Napaka2");
+
+                    e.printStackTrace();
+                }
+
+                //PARSE JSON DATA
+                try{
+                    JSONArray ja = new JSONArray(result);
+                    JSONObject jo = null;
+
+                    DataAll da = new DataAll();
+                    SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
+                    String ime=sharedpreferences.getString("name",null);
+                    System.out.println("Dolzina: "+ja.length());
+
+                    Integer st=0;
+                    for(int i=0;i<ja.length();i++){
+                        jo = ja.getJSONObject(i);
+                        if(vse==0){
+
+                            if(jo.getString("user").equals(ime)) {
+
+                                String dataId = jo.getString("id");
+                                String dataDom = jo.getString("dom");
+                                String dataSoba = jo.getString("soba");
+                                String dataOpis = jo.getString("opis");
+                                String dataUser = jo.getString("user");
+                                String dataTip = jo.getString("tip_napake");
+                                String dataDatum = jo.getString("datum");
+                                String dataSlika = jo.getString("slika");
+                                Double smerX = jo.getDouble("x");
+                                Double smerY = jo.getDouble("y");
+                                String konc = jo.getString("koncano");
+
+                                da.addLocation(dataId, dataDom, dataSoba, dataUser, dataDatum, dataOpis, dataSlika, dataTip, smerX, smerY, konc);
+                                st++;
+                            }
+                        }
+                        else{
+                            if(jo.getString("koncano").equals("0")){
+                                String dataId = jo.getString("id");
+                                String dataDom = jo.getString("dom");
+                                String dataSoba = jo.getString("soba");
+                                String dataOpis = jo.getString("opis");
+                                String dataUser = jo.getString("user");
+                                String dataTip = jo.getString("tip_napake");
+                                String dataDatum = jo.getString("datum");
+                                String dataSlika = jo.getString("slika");
+                                Double smerX = jo.getDouble("x");
+                                Double smerY = jo.getDouble("y");
+                                String konc = jo.getString("koncano");
+
+                                da.addLocation(dataId, dataDom, dataSoba, dataUser, dataDatum, dataOpis, dataSlika, dataTip, smerX, smerY, konc);
+                                st++;
+                            }
+                        }
+                    }
+                    System.out.println("Dodanih "+st);
+
+                    all = da;
+                    return da;
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                return null;
             }
-            // Initialize population
-            Population pop = new Population(50, true);
-            System.out.println("Initial distance: " + pop.getFittest().getDistance());
 
-            // Evolve population for 100 generations
-            pop = GA.evolvePopulation(pop);
-            for (int i = 0; i < 100; i++) {
-                pop = GA.evolvePopulation(pop);
+            @Override
+            protected void onPostExecute(DataAll result) {
+                // TODO Auto-generated method stub
+                /**
+                 * update ui thread and remove dialog
+                 */
+                Intent i = new Intent(getBaseContext(), ActivityListMain.class);
+                startActivity(i);
+
+                super.onPostExecute(result);
             }
-
-            // Print final results
-            /*System.out.println("Finished");
-            System.out.println("Final distance: " + pop.getFittest().getDistance());
-            System.out.println("Solution:");
-            System.out.println(pop.getFittest());*/
-
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putString("pot", pop.getFittest().toString());
-
-            editor.commit();
-            all = da;
-        }catch (Exception e){
-            //Toast.makeText(getApplicationContext(), "Website is probably sleeping.", Toast.LENGTH_SHORT).show();
-
-            e.printStackTrace();
         }
+
+        DownloadFilesTask gi = new DownloadFilesTask();
+        gi.execute();
     }
 
     @Subscribe

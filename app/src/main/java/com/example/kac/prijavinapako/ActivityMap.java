@@ -13,6 +13,10 @@ import android.widget.Toast;
 
 import com.example.DataAll;
 import com.example.Lokacija;
+import com.example.kac.prijavinapako.Trgovski_potnik.City;
+import com.example.kac.prijavinapako.Trgovski_potnik.GA;
+import com.example.kac.prijavinapako.Trgovski_potnik.Tour;
+import com.example.kac.prijavinapako.Trgovski_potnik.TourManager;
 import com.example.kac.prijavinapako.eventbus.MessageEventUpdateLocation;
 
 import org.greenrobot.eventbus.EventBus;
@@ -42,6 +46,7 @@ public class ActivityMap extends AppCompatActivity {
     private String id_user = "xklemenx@gmail.com";
     private ItemizedOverlayWithFocus<OverlayItem> mMyLocationOverlay;
     Location mLocation;
+    City city;
 
 
     @Subscribe
@@ -52,6 +57,9 @@ public class ActivityMap extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        app = (ApplicationMy) getApplication();
+
         super.onCreate(savedInstanceState);
         Context ctx = getApplicationContext();
         //important! set your user agent to prevent getting banned from the osm servers
@@ -86,13 +94,12 @@ public class ActivityMap extends AppCompatActivity {
         mMyLocationOverlay.setFocusItemsOnTap(true);
 
         mMapView.getOverlays().add(mMyLocationOverlay);
-        app = (ApplicationMy) getApplication();
+
 
         SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
         String potka=sharedpreferences.getString("pot",null);
 
-        Toast.makeText(this, potka , Toast.LENGTH_LONG).show();
-
+        //Toast.makeText(this, potka , Toast.LENGTH_LONG).show();
     }
 
 
@@ -113,18 +120,39 @@ public class ActivityMap extends AppCompatActivity {
     public void onResume() {
         super.onResume();
 
+        app = (ApplicationMy) getApplication();
+        int stNapak=app.getAll().getLokacijaAll().size();
+
+
         if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
         startService(new Intent(app, GPSTracker.class));//start service
         Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
             items = new ArrayList<OverlayItem>();
 
-            List<Lokacija> lokacijaList = app.all.getLokacijaAll();
+            List<Lokacija> lokacijaList = app.getAll().getLokacijaAll();
+            TourManager ta = new TourManager();
+            ta.clearCity();
+            for(int i=0;i<lokacijaList.size();i++){
+                city = new City(lokacijaList.get(i).getX(), lokacijaList.get(i).getY(),lokacijaList.get(i).getDom(),lokacijaList.get(i).getId());
+                ta.addCity(city);
+            }
+        Population pop = new Population(50, true);
+
+        // Evolve population for 100 generations
+        pop = GA.evolvePopulation(pop);
+        for (int i = 0; i < 100; i++) {
+            pop = GA.evolvePopulation(pop);
+        }
+
+        Toast.makeText(this, pop.getFittest().toString() , Toast.LENGTH_LONG).show();
+
             for (int x = 0; x < lokacijaList.size(); x++) {
                 OverlayItem olItem = new OverlayItem(lokacijaList.get(x).getTipNapake(), lokacijaList.get(x).getDom(), new GeoPoint(lokacijaList.get(x).getX(), lokacijaList.get(x).getY()));
-                Drawable newMarker = this.getResources().getDrawable(R.drawable.icon48);
+                Drawable newMarker = this.getResources().getDrawable(R.drawable.marker_default);
                 olItem.setMarker(newMarker);
                 items.add(olItem);
             }
+
             GeoPoint startPoint = null;
             mLocation = app.getLastLocation();
             ArrayList<OverlayItem> mItems = new ArrayList<OverlayItem>();

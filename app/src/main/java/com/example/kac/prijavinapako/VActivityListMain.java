@@ -16,19 +16,18 @@ import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcManager;
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
 import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
@@ -50,7 +49,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
-public class ActivityListMain extends AppCompatActivity  {
+public class VActivityListMain extends AppCompatActivity  {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -94,6 +93,7 @@ public class ActivityListMain extends AppCompatActivity  {
                     @Override
                     public void onResult(@NonNull Status status) {
                         if (status.isSuccess()) {
+
                             goLogInScreen();
                         }
                     }
@@ -112,46 +112,40 @@ public class ActivityListMain extends AppCompatActivity  {
         }
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         app = (ApplicationMy) getApplication();
         setContentView(R.layout.activity_list_main);
-        //app.getData();
+        app.getData();
         mRecyclerView = (RecyclerView) findViewById(R.id.myrecycleview);
-
         mRecyclerView.setHasFixedSize(true);
 
-        // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        // specify an adapter (see also next example)
-        //app = (ApplicationMy) getApplication();
         mAdapter = new AdapterLokacija(app.getAll(), this);
         mRecyclerView.setAdapter(mAdapter);
+
 
         //TODO Show V7
         setDeleteOnSwipe(mRecyclerView);
 
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setBackgroundColor(getResources().getColor(R.color.colorGray));
+        fab.setVisibility(View.INVISIBLE);
+
+        map = (FloatingActionButton) findViewById(R.id.map);
+        map.setBackgroundColor(getResources().getColor(R.color.common_border_color));
         //fab.set
-        fab.setOnClickListener(new View.OnClickListener() {
+        map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Intent i = new Intent(getBaseContext(), ActivityLocation.class);
-                i.putExtra(DataAll.LOKACIJA_ID, ActivityLocation.NEW_LOCATION_ID);
+                Intent i = new Intent(getBaseContext(), ActivityMap.class);
                 startActivity(i);
-                // }
             }
         });
-
-        map = (FloatingActionButton) findViewById(R.id.map);
-        map.setVisibility(View.INVISIBLE);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -161,74 +155,23 @@ public class ActivityListMain extends AppCompatActivity  {
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        Toast.makeText(ActivityListMain.this, "Nekaj je šlo narobe." , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(VActivityListMain.this, "Nekaj je šlo narobe." , Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        Toast.makeText(ActivityListMain.this, "Oncreateee" , Toast.LENGTH_LONG).show();
-
-
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (nfcAdapter == null || !nfcAdapter.isEnabled()) {
-           // Toast.makeText(ActivityListMain.this, "NFC ni prisoten!" , Toast.LENGTH_SHORT).show();
+            Toast.makeText(VActivityListMain.this, "NFC ni prisoten!" , Toast.LENGTH_SHORT).show();
         }
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
 
-        if(intent.hasExtra(NfcAdapter.EXTRA_TAG)){
 
-                //Beri
-                Parcelable[] parcelables = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
 
-                if(parcelables != null && parcelables.length > 0){
-                    readTextFromMessage((NdefMessage)parcelables[0]);
-                }else{
-                    Toast.makeText(this,"No NDEF messages found!",Toast.LENGTH_LONG).show();
-                }
-        }
-    }
 
-    private void readTextFromMessage(NdefMessage ndefMessage) {
-        NdefRecord[] ndefRecords = ndefMessage.getRecords();
 
-        if(ndefRecords != null && ndefRecords.length>0){
-            NdefRecord ndefRecord = ndefRecords[0];
-
-            String tagContent = getTextFromNdefRecord(ndefRecord);
-
-            //Tukaj berem
-
-            if(tagContent.toString()!=null){
-                Intent i = new Intent(getBaseContext(), ActivityLocation.class);
-                i.putExtra(DataAll.LOKACIJA_ID, ActivityLocation.NEW_LOCATION_ID);
-                i.putExtra("Vpisna", tagContent);
-                startActivity(i);
-            }
-
-            /*
-            if(tagContent.toString().equals("E1091722")){
-                Intent i = new Intent(getBaseContext(), ActivityLocation.class);
-                i.putExtra(DataAll.LOKACIJA_ID, ActivityLocation.NEW_LOCATION_ID);
-                i.putExtra("Vpisna", "E1091722");
-                startActivity(i);
-            }
-            else if(tagContent.toString().equals("E123567")){
-                Intent i = new Intent(getBaseContext(), ActivityLocation.class);
-                i.putExtra(DataAll.LOKACIJA_ID, ActivityLocation.NEW_LOCATION_ID);
-                i.putExtra("Vpisna", "E123567");
-                startActivity(i);
-            }*/
-            //Toast.makeText(this,tagContent.toString(),Toast.LENGTH_LONG).show();
-
-        }else{
-            Toast.makeText(this,"No NDEF records found!",Toast.LENGTH_LONG).show();
-        }
-    }
 
     public void setDeleteOnSwipe(final RecyclerView mRecyclerView) {
 
@@ -248,7 +191,6 @@ public class ActivityListMain extends AppCompatActivity  {
                                 app.removeLocationByPosition(viewHolder.getAdapterPosition());
                                 app.save();
                                 mRecyclerView.getAdapter().notifyDataSetChanged();
-
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:
@@ -259,7 +201,7 @@ public class ActivityListMain extends AppCompatActivity  {
                     }
                 };
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(ActivityListMain.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(VActivityListMain.this);
                 builder.setTitle("Izbriši napako");
                 builder.setMessage("Ali si prepričan?").setPositiveButton("Da", dialogClickListener)
                         .setNegativeButton("Ne", dialogClickListener)
@@ -290,13 +232,13 @@ public class ActivityListMain extends AppCompatActivity  {
         MultiplePermissionsListener my  = new MultiplePermissionsListener() {
             @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
                 if (!report.areAllPermissionsGranted()) {
-                    new android.app.AlertDialog.Builder(ActivityListMain.this)
+                    new android.app.AlertDialog.Builder(VActivityListMain.this)
                             .setTitle(getString(R.string.permission_must_title))
                             .setMessage(getString(R.string.permission_must))
                             .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                 @Override public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
-                                    ActivityListMain.this.finish(); //end app!
+                                    VActivityListMain.this.finish(); //end app!
                                 }
                             })
                             .setIcon(R.drawable.trash_icon)
@@ -321,6 +263,12 @@ public class ActivityListMain extends AppCompatActivity  {
     protected void onStart() {
         super.onStart();
         getPermissions();
+
+        SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
+
+        String ime=sharedpreferences.getString("name",null);
+
+
     }
 
     private void goLogInScreen() {
@@ -345,6 +293,7 @@ public class ActivityListMain extends AppCompatActivity  {
             }
         });
     }
+
     public void revoke(View view) {
         Auth.GoogleSignInApi.revokeAccess(googleApiClient).setResultCallback(new ResultCallback<Status>() {
             @Override
@@ -357,6 +306,7 @@ public class ActivityListMain extends AppCompatActivity  {
             }
         });
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -367,22 +317,12 @@ public class ActivityListMain extends AppCompatActivity  {
     protected void onResume() {
         super.onResume();
         mAdapter.notifyDataSetChanged();
-
-        NfcManager manager = (NfcManager) this.getSystemService(Context.NFC_SERVICE);
-        NfcAdapter adapter = manager.getDefaultAdapter();
-        if (adapter != null && adapter.isEnabled()) {
-            enableForegroundFispatchSystem();
-        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        NfcManager manager = (NfcManager) this.getSystemService(Context.NFC_SERVICE);
-        NfcAdapter adapter = manager.getDefaultAdapter();
-        if (adapter != null && adapter.isEnabled()) {
-            disableForegroundDispatchSystem();
-        }
+
     }
 
     @Override
@@ -394,36 +334,6 @@ public class ActivityListMain extends AppCompatActivity  {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    private void enableForegroundFispatchSystem(){
-        Intent intent = new Intent(this, ActivityListMain.class).addFlags(Intent.FLAG_RECEIVER_REPLACE_PENDING);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-        IntentFilter[] intentFilters = new IntentFilter[]{};
-
-        nfcAdapter.enableForegroundDispatch(this,pendingIntent, intentFilters,null);
-
-    }
-
-    private void disableForegroundDispatchSystem(){
-
-        nfcAdapter.disableForegroundDispatch(this);
-    }
-
-
-    public String getTextFromNdefRecord(NdefRecord ndefRecord){
-        String tagContent=null;
-        try{
-            byte[] payload = ndefRecord.getPayload();
-            String textEncoding = ((payload[0] & 128) == 0) ? "UTF-8" : "UTF-16";
-            int languageSize = payload[0] & 0063;
-            tagContent = new String(payload, languageSize +1, payload.length-languageSize-1, textEncoding);
-        }catch (Exception e){
-
-        }
-        return tagContent;
     }
 }
 

@@ -12,6 +12,10 @@ public class TourManager {
     // Holds our cities
     private static ArrayList destinationCities = new ArrayList<City>();
 
+    public void clearCity(){
+        destinationCities.clear();
+    }
+
     // Adds a destination city
     public static void addCity(City city) {
         destinationCities.add(city);

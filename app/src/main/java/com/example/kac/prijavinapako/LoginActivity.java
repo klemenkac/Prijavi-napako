@@ -37,34 +37,21 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
-        String ime=sharedpreferences.getString("prvaprijava",null);
 
-        if(ime==null){
-            Intent intent = new Intent(this, ActivityIntro.class);
-            startActivity(intent);
-
-
-        }
-
-
-        app = (ApplicationMy) getApplication();
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
 
-       /* SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedpreferences.edit();
+        String ime = sharedpreferences.getString("name",null);
 
-        editor.putString("name", "");
-
-        editor.commit();*/
-
-
-        if(sharedpreferences.getString("name",null)!="" && sharedpreferences.getString("name",null)!=null){
+        if(ime!=null && ime.equals("v")){
+            Intent i = new Intent(LoginActivity.this, VActivityListMain.class);
+            startActivity(i);
+        }
+        else if(ime!=null && !ime.equals("")){
             Intent i = new Intent(LoginActivity.this, ActivityListMain.class);
             startActivity(i);
         }
-
 
         final EditText etUsername = (EditText) findViewById(R.id.etUsername);
         final EditText etPassword = (EditText) findViewById(R.id.etPassword);
@@ -95,13 +82,21 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             boolean success = jsonResponse.getBoolean("success");
 
                             if (success) {
+                                app.getData();
                                 SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sharedpreferences.edit();
                                 editor.putString("name", username);
 
                                 editor.commit();
-                                Intent intent = new Intent(LoginActivity.this, ActivityListMain.class);
-                                LoginActivity.this.startActivity(intent);
+
+                                if(username.equals("v")){
+                                    Intent intent = new Intent(LoginActivity.this, VActivityListMain.class);
+                                    LoginActivity.this.startActivity(intent);
+                                }else{
+                                    Intent intent = new Intent(LoginActivity.this, ActivityListMain.class);
+                                    LoginActivity.this.startActivity(intent);
+                                }
+
                             } else {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                                 builder.setMessage("Napaka pri prijavi.")
@@ -138,7 +133,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 startActivityForResult(intent,SIGN_IN_CODE);
             }
         });
-
     }
 
     private void saveLoginState(String id_token, String name){
@@ -148,7 +142,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         editor.putString("name", name);
 
         editor.commit();
-
     }
 
     @Override
@@ -180,8 +173,18 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void goMainScreen(){
-        Intent intent = new Intent(this, ActivityListMain.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
+
+        String ime=sharedpreferences.getString("name",null);
+        if(ime.equals("v")) {
+            Intent intent = new Intent(LoginActivity.this, VActivityListMain.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }else{
+            Intent intent = new Intent(this, ActivityListMain.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+
     }
 }

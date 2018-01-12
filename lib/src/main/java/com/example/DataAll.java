@@ -33,15 +33,10 @@ public class DataAll {
         lokacijaList.add(l);
     }
 
-    public Lokacija addLocation(String id,String dom, String soba, String idUser,String datum, String opis, String im, String tipNapake, Double smerX, Double smerY) {
-
-       /* Date myDate = new Date();
-        String datum = new SimpleDateFormat("dd. MM. YYYY").format(myDate);*/
-
-        Lokacija tmp = new Lokacija(id, dom, soba, idUser, datum, opis, im, tipNapake, smerX, smerY);
+    public Lokacija addLocation(String id,String dom, String soba, String idUser,String datum, String opis, String im, String tipNapake, Double smerX, Double smerY, String koncano) {
+        Lokacija tmp = new Lokacija(id, dom, soba, idUser, datum, opis, im, tipNapake, smerX, smerY, koncano);
         lokacijaList.add(tmp);
         return tmp;
-//hello
     }
 
 
@@ -71,9 +66,6 @@ public class DataAll {
                 '}';
     }
 
-   /* public static DataAll scenarijB(String dom){
-
-    }*/
 
     public static DataAll scenarijA(String dom) {
         DataAll da = new DataAll();
@@ -81,29 +73,11 @@ public class DataAll {
         da.userMe = new User("xklemenx@gmail.com","Klemen Andrejc Kac");
         Lokacija tmp;
 
-
-        //tmp = da.addLocation(dom, "252","Janez novak","Potrebna zamenjava zarnice na stropu sobe.","","");
-/*
-        tmp = da.addLocation(dom, "252","Janez novak","Potrebna zamenjava zarnice na stropu sobe.","","");
-
-        tmp = da.addLocation("Dom 13", "252","Janez novak","Potrebna zamenjava zarnice na stropu sobe.","","");
-
-        tmp = da.addLocation("Dom 6", "142","Klemen Kac","Pokvarjena pipa v kuhinji.","","");
-
-        tmp = da.addLocation("Dom 2", "425","Miha Zupan","Zarnica v kopalnici nad ogledalom ne dela.","","");*/
-
-        /*for (int i=0; i<3; i++){
-            tmp = da.addLocation("Studentski dom 2", "425C","","Zarnica v kopalnici nad ogledalom ne dela.","","");
-        }*/
         return da;
     }
 
-
-
     public void addLokacija(Lokacija l) {
         lokacijaList.add(l);
-
-
     }
 
     public Lokacija getLocation(int i) {
@@ -121,6 +95,7 @@ public class DataAll {
     public List<Lokacija> getLokacijaAll() {
         return lokacijaList;
     }
+
 
     public void addNewLocationTag(LokacijaTag tag) {
         lokacijaTagList.add(tag);
@@ -144,6 +119,15 @@ public class DataAll {
             if (lokacijaTagList.get(i).getIdLokacija().equals(locationId))
                 lokacijaTagList.remove(i);
         }
+    }
+
+    public void removeLocation(String locationId) {
+        for(int i=0;i<getLokacijaAll().size();i++){
+            if(getLocation(i).getId().equals(locationId)){
+                getLokacijaAll().remove(i);
+            }
+        }
+
     }
 
     public ArrayList<LokacijaTag> getDefultTagLists(ArrayList<Tag> tags, Lokacija l) {

@@ -8,6 +8,8 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationManager;
@@ -75,6 +77,7 @@ public class ActivityLocation extends AppCompatActivity {
     EditText edS;
     EditText edO;
     TextView tvDatum;
+    TextView tvKoncano;
     String path;
     TextView stanovalec;
     Lokacija l;
@@ -84,6 +87,7 @@ public class ActivityLocation extends AppCompatActivity {
     PermissionGranted permissionGranted;
     MagicalCamera magicalCamera;
     boolean stateNew;
+    String ime;
     private int RESIZE_PHOTO_PIXELS_PERCENTAGE = 10;
 
     static final int REQUEST_LOCATION = 1;
@@ -116,12 +120,16 @@ public class ActivityLocation extends AppCompatActivity {
         MaterialBetterSpinner tipSpinner = (MaterialBetterSpinner)findViewById(spinnerTipNapake);
         tipSpinner.setAdapter(arrayAdapterTip);
 
+        SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
+        ime=sharedpreferences.getString("name",null);
+
         app = (ApplicationMy) getApplication();
         ivSlika =(ImageView) findViewById(R.id.imageViewmain);
         edS = (EditText) findViewById(R.id.txtSoba);
         edO = (EditText) findViewById(R.id.txtOpis);
         stanovalec = (TextView) findViewById(R.id.stanovalec);
         tvDatum = (TextView) findViewById(R.id.datum);
+        tvKoncano = (TextView) findViewById(R.id.konc);
         stateNew = false;
         stanovalec.setVisibility(View.INVISIBLE);
 
@@ -138,7 +146,6 @@ public class ActivityLocation extends AppCompatActivity {
 
         ID="";
 
-
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mFusedLocationClient.getLastLocation()
                 .addOnSuccessListener(this, new OnSuccessListener<Location>() {
@@ -152,6 +159,8 @@ public class ActivityLocation extends AppCompatActivity {
                             longi=location.getLongitude();
                         }
                         else{
+                            Toast.makeText(getApplicationContext(), "Lokacije ni mogoče zaznati.", Toast.LENGTH_SHORT).show();
+
                             latti=0.0;
                             longi=0.0;
                         }
@@ -187,7 +196,7 @@ public class ActivityLocation extends AppCompatActivity {
             Date cDate = new Date();
             String datum = new SimpleDateFormat("dd. MM. yyyy").format(cDate);
 
-            l = new Lokacija("","", "", app.getAll().getUserMe().getIdUser(),datum,"",path,"",0.0,0.0);
+            l = new Lokacija("","", "", app.getAll().getUserMe().getIdUser(),datum,"",path,"",0.0,0.0,"");
             update(l);
 
         }else{
@@ -241,10 +250,11 @@ public class ActivityLocation extends AppCompatActivity {
         tipSpinner.setText(l.getTipNapake());
 
         edS.setText(""+l.getSoba());
-
+        edO.setText(l.getOpis());
 
         if(!stateNew){
-            edO.setText(l.getOpis());
+            if(l.getKoncano().equals("1") || ime.equals("v")){
+
             edO.setEnabled(false);
             edS.setEnabled(false);
             domSpinner.setEnabled(false);
@@ -255,9 +265,17 @@ public class ActivityLocation extends AppCompatActivity {
             posljiButn.setVisibility(View.INVISIBLE);
             stanovalec.setVisibility(View.VISIBLE);
             stanovalec.setText(l.getIdUser());
-        }
-        else{
-            edO.setText(l.getOpis());
+
+                //crnobela slika
+                ColorMatrix matrix = new ColorMatrix();
+                matrix.setSaturation(0);
+                ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+                ivSlika.setColorFilter(filter);
+                if(l.getKoncano().equals("1"))
+                    tvKoncano.setVisibility(View.VISIBLE);
+            }
+
+
         }
 
 
@@ -307,34 +325,28 @@ public class ActivityLocation extends AppCompatActivity {
 
 
     public void save() {
-
-
         MaterialBetterSpinner domSpinner = (MaterialBetterSpinner)findViewById(spinnerDom);
         l.setDom(domSpinner.getText().toString());
-
-
-
         MaterialBetterSpinner tipSpinner = (MaterialBetterSpinner)findViewById(spinnerTipNapake);
         l.setTipNapake(tipSpinner.getText().toString());
-
         l.setOpis(edO.getText().toString());
-
         l.setSoba(edS.getText().toString());
+        l.setX(latti);
+        l.setY(longi);
 
-        SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
-        String ime=sharedpreferences.getString("name",null);
+
         l.setIdUser(ime);
 
-        Bitmap bm = BitmapFactory.decodeFile(path);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
-        byte[] b = baos.toByteArray();
+        if(path!=null){
+            Bitmap bm = BitmapFactory.decodeFile(path);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+            byte[] b = baos.toByteArray();
 
-        encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+            encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
 
-        l.setFileName(encodedImage);
-        // l.setDate(tvDatum.getText().toString());
-
+            l.setFileName(encodedImage);
+        }
 
         if(domSpinner.getText().toString()=="Študentski dom"){
             Toast.makeText(this, "Neveljavni študentski dom!", Toast.LENGTH_SHORT).show();
@@ -345,13 +357,10 @@ public class ActivityLocation extends AppCompatActivity {
         else{
             app.save();
             Toast.makeText(this,"Napaka shranjena", Toast.LENGTH_SHORT).show();        }
-        System.out.println("Po:"+l);
+
     }
 
     public void onClickSaveMe(View v) {
-
-        int a = l.getId().length();
-        // Toast.makeText(this,a + "", Toast.LENGTH_SHORT).show();
         MaterialBetterSpinner domSpinner = (MaterialBetterSpinner)findViewById(spinnerDom);
         MaterialBetterSpinner tipSpinner = (MaterialBetterSpinner)findViewById(spinnerTipNapake);
         String ajdi = l.getId().toString();
@@ -387,7 +396,6 @@ public class ActivityLocation extends AppCompatActivity {
                     }
                 }
             };
-            // Toast.makeText(this, app.getAll().getUserMe().getIdUser().toString(), Toast.LENGTH_SHORT).show();
             SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
             String juzer=sharedpreferences.getString("name",null);
 
@@ -401,8 +409,8 @@ public class ActivityLocation extends AppCompatActivity {
                 encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
             }
 
-            
-                NapakaRequest napakaRequest = new NapakaRequest(ajdi, dom, soba, tip_napake, opis, juzer,encodedImage,latti,longi, responseListener);
+                String konec="0";
+                NapakaRequest napakaRequest = new NapakaRequest(ajdi, dom, soba, tip_napake, opis, juzer,encodedImage,latti,longi,konec, responseListener);
                 RequestQueue queue = Volley.newRequestQueue(ActivityLocation.this);
                 queue.add(napakaRequest);
 
@@ -434,13 +442,7 @@ public class ActivityLocation extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(ActivityLocation.this);
         queue.add(napakaUpdateRequest);
 
-        //Toast.makeText(this, l.getId().toString(), Toast.LENGTH_SHORT).show();
-
         save();
         finish();
     }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 }

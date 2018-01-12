@@ -80,9 +80,10 @@
         android:scaleType="fitXY"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.4"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/tools" />
 
     <android.support.constraint.Guideline
@@ -100,6 +101,7 @@
         android:layout_height="100dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="Poljuben opis napake"
         android:inputType="textMultiLine"
@@ -130,19 +132,34 @@
 
     <TextView
         android:id="@+id/datum"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginStart="16dp"
         android:text="02. 03. 2017"
         android:textColor="@android:color/holo_red_light"
         android:textSize="20sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/konc"
+        android:layout_width="0dp"
+        android:layout_height="29dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="Končano"
+        android:textAlignment="textEnd"
+        android:gravity="end"
+        android:textColor="@android:color/holo_red_light"
+        android:textSize="24sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintRight_toRightOf="@+id/imageViewmain"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/datum" />
 
     <EditText
         android:id="@+id/txtSoba"

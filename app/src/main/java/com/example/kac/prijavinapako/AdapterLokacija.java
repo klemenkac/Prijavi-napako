@@ -1,13 +1,19 @@
 package com.example.kac.prijavinapako;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.location.Location;
+import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +62,7 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
         public TextView txtUser;
         public TextView txtDatum;
         public ImageView iv;
+        public ConstraintLayout layout;
 
         public ViewHolder(View v) {
             super(v);
@@ -64,8 +71,10 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
             txtOpis = (TextView) v.findViewById(R.id.textViewOpis);
             txtTip = (TextView) v.findViewById(R.id.textViewTip);
             txtUser = (TextView) v.findViewById(R.id.textViewUser);
-            // txtFooter = (TextView) v.findViewById(R.id.secondLine);
             txtDatum = (TextView) v.findViewById(R.id.textViewDatum);
+            layout =(ConstraintLayout)v.findViewById(R.id.constlay);
+
+
             iv = (ImageView)v.findViewById(R.id.icon);
         }
     }
@@ -119,6 +128,8 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
         }
 
 
+
+
        /* byte[] decodedString = Base64.decode(trenutni.getFileName(), Base64.DEFAULT);
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
         holder.iv.setImageBitmap(decodedByte);*/
@@ -135,7 +146,16 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
             holder.txtSoba.setTextColor(Color.DKGRAY);
         }
 
+        if(trenutni.getKoncano().equals("1")){
+            //crnobela slika
+            ColorMatrix matrix = new ColorMatrix();
+            matrix.setSaturation(0);
+            ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+            holder.iv.setColorFilter(filter);
 
+            holder.txtDatum.setTextColor(000000);
+            holder.txtOpis.setTextColor(Color.DKGRAY);
+        }
 
         holder.txtDom.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,6 +209,8 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
         holder.txtTip.setText(trenutni.getTipNapake());
         holder.txtUser.setText(trenutni.getIdUser());
         holder.txtDatum.setText(trenutni.getDate());
+
+
 
         byte[] decodedString = Base64.decode(trenutni.getFileName(), Base64.DEFAULT);
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);

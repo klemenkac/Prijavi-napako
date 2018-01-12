@@ -44,6 +44,7 @@
         <activity android:name=".ActivityMap"/>
         <activity android:name=".ActivityMySettings"/>
         <activity android:name=".ActivityListMain"/>
+        <activity android:name=".VActivityListMain"/>
         <activity android:name=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".RegisterActivity"

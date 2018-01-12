@@ -149,7 +149,6 @@ public class ActivityWeka extends AppCompatActivity {
                     fvWekaAttributes.addElement(Attribute6);
                     fvWekaAttributes.addElement(ClassAttribute);
 
-
                     // Create an empty training set
                     Instances isTrainingSet = new Instances("Rel", fvWekaAttributes, 10);
                     // Set class index
@@ -165,8 +164,6 @@ public class ActivityWeka extends AppCompatActivity {
                     iExample.setValue((Attribute)fvWekaAttributes.elementAt(5), nujnS.getText().toString());
                     // add the instance
                     isTrainingSet.add(iExample);
-
-
 
                     // Učna množica
                     InputStream is = getBaseContext().getAssets().open("napake.arff");
@@ -219,18 +216,16 @@ public class ActivityWeka extends AppCompatActivity {
 
                     }
 
-
                     if(prediction==0.0)
-                        Toast.makeText(ActivityWeka.this, "Napoved: Elektro/n" + eval.toSummaryString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ActivityWeka.this, "Napoved: Elektro\n" + eval.toSummaryString(), Toast.LENGTH_SHORT).show();
                     else if(prediction==1.0)
-                        Toast.makeText(ActivityWeka.this, "Napoved: Oprema " + eval.toSummaryString() , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ActivityWeka.this, "Napoved: Oprema\n" + eval.toSummaryString() , Toast.LENGTH_SHORT).show();
                     else if(prediction==2.0)
                         Toast.makeText(ActivityWeka.this, "Napoved: Vodovod\n" + eval.toSummaryString(), Toast.LENGTH_SHORT).show();
                     else if(prediction==3.0)
-                        Toast.makeText(ActivityWeka.this, "Napoved: Internet" + eval.toSummaryString() , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ActivityWeka.this, "Napoved: Internet\n" + eval.toSummaryString() , Toast.LENGTH_SHORT).show();
                     else
                         Toast.makeText(ActivityWeka.this, String.valueOf(prediction) , Toast.LENGTH_SHORT).show();
-
                 }
                 catch (Exception e){
                     Toast.makeText(ActivityWeka.this, "Nekaj je šlo narobe..." , Toast.LENGTH_SHORT).show();
@@ -238,8 +233,4 @@ public class ActivityWeka extends AppCompatActivity {
             }
         });
     }
-
-
-
-
 }

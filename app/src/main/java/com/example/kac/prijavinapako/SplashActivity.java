@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
@@ -53,6 +54,14 @@ public class SplashActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+
+            Response.ErrorListener errorListener = new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(SplashActivity.this, "Server down", Toast.LENGTH_SHORT).show();
+                }
+            };
         };
 
         DelovanjeRequest delovanjeRequestRequest = new DelovanjeRequest(responseListener);

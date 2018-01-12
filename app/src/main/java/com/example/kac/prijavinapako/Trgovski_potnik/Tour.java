@@ -96,7 +96,10 @@ public class Tour {
     public String toString() {
         String geneString = "Najkrajša pot: ";
         for (int i = 0; i < tourSize(); i++) {
-            geneString += getCity(i).stDoma+" -> ";
+            if(i==tourSize()-1)
+                geneString += getCity(i).stDoma;
+            else
+                geneString += getCity(i).stDoma+" -> ";
         }
         return geneString;
     }
