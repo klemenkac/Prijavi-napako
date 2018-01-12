@@ -32,44 +32,54 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ApplicationMy app;
+        app = (ApplicationMy) getApplication();
+        SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
+        String ime=sharedpreferences.getString("name",null);
 
-        Response.Listener<String> responseListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
+        if(ime!=null && !ime.equals("")){
+            app.getData();
+        }else{
+            Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    boolean success = jsonResponse.getBoolean("success");
-                    if (success) {
-                        Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
+            Response.Listener<String> responseListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        boolean success = jsonResponse.getBoolean("success");
+                        if (success) {
+                            Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Intent intent = new Intent(SplashActivity.this, NiStreznika.class);
+                            startActivity(intent);
+                        }
+                    } catch (JSONException e) {
                         Intent intent = new Intent(SplashActivity.this, NiStreznika.class);
                         startActivity(intent);
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    Intent intent = new Intent(SplashActivity.this, NiStreznika.class);
-                    startActivity(intent);
-                    e.printStackTrace();
                 }
-            }
 
-            Response.ErrorListener errorListener = new Response.ErrorListener() {
+                Response.ErrorListener errorListener = new Response.ErrorListener() {
 
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(SplashActivity.this, "Server down", Toast.LENGTH_SHORT).show();
-                }
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(SplashActivity.this, "Server down", Toast.LENGTH_SHORT).show();
+                    }
+                };
             };
-        };
-
-        DelovanjeRequest delovanjeRequestRequest = new DelovanjeRequest(responseListener);
-        RequestQueue queue = Volley.newRequestQueue(SplashActivity.this);
-        queue.add(delovanjeRequestRequest);
+        }
 
 
 
-    }
+
+
 
 }

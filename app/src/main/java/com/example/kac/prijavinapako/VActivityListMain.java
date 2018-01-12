@@ -32,6 +32,8 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.example.DataAll;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -118,7 +120,7 @@ public class VActivityListMain extends AppCompatActivity  {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         app = (ApplicationMy) getApplication();
         setContentView(R.layout.activity_list_main);
-        app.getData();
+
         mRecyclerView = (RecyclerView) findViewById(R.id.myrecycleview);
         mRecyclerView.setHasFixedSize(true);
 
@@ -167,12 +169,6 @@ public class VActivityListMain extends AppCompatActivity  {
         }
     }
 
-
-
-
-
-
-
     public void setDeleteOnSwipe(final RecyclerView mRecyclerView) {
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -188,7 +184,7 @@ public class VActivityListMain extends AppCompatActivity  {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which){
                             case DialogInterface.BUTTON_POSITIVE:
-                                app.removeLocationByPosition(viewHolder.getAdapterPosition());
+                                app.setLocationKoncano(viewHolder.getAdapterPosition());
                                 app.save();
                                 mRecyclerView.getAdapter().notifyDataSetChanged();
                                 break;

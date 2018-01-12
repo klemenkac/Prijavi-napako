@@ -27,6 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -90,6 +91,7 @@ public class ActivityLocation extends AppCompatActivity {
     String ime;
     private int RESIZE_PHOTO_PIXELS_PERCENTAGE = 10;
 
+
     static final int REQUEST_LOCATION = 1;
 
 
@@ -131,6 +133,7 @@ public class ActivityLocation extends AppCompatActivity {
         tvDatum = (TextView) findViewById(R.id.datum);
         tvKoncano = (TextView) findViewById(R.id.konc);
         stateNew = false;
+
         stanovalec.setVisibility(View.INVISIBLE);
 
         permissionGranted = new PermissionGranted(this);

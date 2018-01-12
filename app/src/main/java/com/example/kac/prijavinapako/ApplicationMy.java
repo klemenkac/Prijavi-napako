@@ -17,6 +17,7 @@ import android.os.Debug;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
@@ -72,19 +73,6 @@ public class ApplicationMy extends Application{
         EventBus.getDefault().register(this);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         StrictMode.setThreadPolicy((new StrictMode.ThreadPolicy.Builder().permitNetwork().build()));
-
-        SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
-        String ime=sharedpreferences.getString("name",null);
-
-        if(ime!=null && ime.equals("v")){
-            //getData(1);
-            vse=1;
-        }
-        else{
-            //getData(0);
-            vse=0;
-        }
-        getData();
 
         mLastLocation=null;
     }
@@ -143,7 +131,11 @@ public class ApplicationMy extends Application{
                     DataAll da = new DataAll();
                     SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
                     String ime=sharedpreferences.getString("name",null);
-                    System.out.println("Dolzina: "+ja.length());
+
+                    if(ime.equals("v"))
+                        vse=1;
+                    else
+                        vse=0;
 
                     Integer st=0;
                     for(int i=0;i<ja.length();i++){
@@ -193,6 +185,7 @@ public class ApplicationMy extends Application{
                     return da;
                 }catch (Exception e){
                     e.printStackTrace();
+                    System.out.println("Napaka8");
                 }
                 return null;
             }
@@ -203,8 +196,14 @@ public class ApplicationMy extends Application{
                 /**
                  * update ui thread and remove dialog
                  */
-                Intent i = new Intent(getBaseContext(), ActivityListMain.class);
-                startActivity(i);
+                if(vse==0){
+                    Intent i = new Intent(getBaseContext(), ActivityListMain.class);
+                    startActivity(i);
+                }
+                else{
+                    Intent i = new Intent(getBaseContext(), VActivityListMain.class);
+                    startActivity(i);
+                }
 
                 super.onPostExecute(result);
             }
@@ -293,6 +292,36 @@ public class ApplicationMy extends Application{
         if (tmp!=null) all = tmp;
         else return false;
         return true;
+    }
+
+    public void setLocationKoncano(int adapterPosition) {
+
+        String ajdi=all.getLokacijaAll().get(adapterPosition).getId().toString();
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    boolean success = jsonResponse.getBoolean("success");
+
+                    if (!success) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ApplicationMy.this);
+                        builder.setMessage("Napaka pri delete napake na strežnik.")
+                                .setNegativeButton("Retry", null)
+                                .create()
+                                .show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        NapakaKoncanoRequest napakaKoncanoRequest = new NapakaKoncanoRequest(ajdi, responseListener);
+        RequestQueue queue = Volley.newRequestQueue(ApplicationMy.this);
+        queue.add(napakaKoncanoRequest);
+
+        all.getLokacijaAll().remove(adapterPosition);
     }
 
     public void removeLocationByPosition(int adapterPosition) {

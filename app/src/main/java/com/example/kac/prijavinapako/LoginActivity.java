@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,26 +34,17 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private Button signInButton;
     public static final int SIGN_IN_CODE = 777;
     ApplicationMy app;
+    ProgressBar pb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
-
+        app = (ApplicationMy) getApplication();
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
 
-        String ime = sharedpreferences.getString("name",null);
-
-        if(ime!=null && ime.equals("v")){
-            Intent i = new Intent(LoginActivity.this, VActivityListMain.class);
-            startActivity(i);
-        }
-        else if(ime!=null && !ime.equals("")){
-            Intent i = new Intent(LoginActivity.this, ActivityListMain.class);
-            startActivity(i);
-        }
-
+        pb=(ProgressBar) findViewById(R.id.progress_bar);
         final EditText etUsername = (EditText) findViewById(R.id.etUsername);
         final EditText etPassword = (EditText) findViewById(R.id.etPassword);
 
@@ -82,25 +74,18 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             boolean success = jsonResponse.getBoolean("success");
 
                             if (success) {
-                                app.getData();
+
                                 SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sharedpreferences.edit();
                                 editor.putString("name", username);
 
                                 editor.commit();
-
-                                if(username.equals("v")){
-                                    Intent intent = new Intent(LoginActivity.this, VActivityListMain.class);
-                                    LoginActivity.this.startActivity(intent);
-                                }else{
-                                    Intent intent = new Intent(LoginActivity.this, ActivityListMain.class);
-                                    LoginActivity.this.startActivity(intent);
-                                }
+                                pb.setVisibility(View.VISIBLE);
+                                app.getData();
 
                             } else {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                                builder.setMessage("Napaka pri prijavi.")
-                                        .setNegativeButton("Retry", null)
+                                builder.setMessage("Uporabniško ime ali geslo je nepravilno.")
                                         .create()
                                         .show();
                             }
@@ -166,25 +151,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private void handleSignInResult(GoogleSignInResult result) {
         if(result.isSuccess()){
-            goMainScreen();
+            pb.setVisibility(View.VISIBLE);
+            app.getData();
         }else{
             Toast.makeText(this, R.string.not_log_in , Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void goMainScreen(){
-        SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
-
-        String ime=sharedpreferences.getString("name",null);
-        if(ime.equals("v")) {
-            Intent intent = new Intent(LoginActivity.this, VActivityListMain.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        }else{
-            Intent intent = new Intent(this, ActivityListMain.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        }
-
-    }
 }

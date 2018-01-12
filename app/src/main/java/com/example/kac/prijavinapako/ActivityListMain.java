@@ -29,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
@@ -167,14 +168,14 @@ public class ActivityListMain extends AppCompatActivity  {
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        Toast.makeText(ActivityListMain.this, "Oncreateee" , Toast.LENGTH_LONG).show();
-
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (nfcAdapter == null || !nfcAdapter.isEnabled()) {
-           // Toast.makeText(ActivityListMain.this, "NFC ni prisoten!" , Toast.LENGTH_SHORT).show();
+            Toast.makeText(ActivityListMain.this, "NFC ni prisoten!" , Toast.LENGTH_SHORT).show();
         }
+
     }
+
 
     @Override
     protected void onNewIntent(Intent intent) {
