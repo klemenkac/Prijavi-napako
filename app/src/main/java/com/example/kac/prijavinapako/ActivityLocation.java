@@ -163,6 +163,7 @@ public class ActivityLocation extends AppCompatActivity {
         public void onLocationChanged(Location loc) {
             longi= loc.getLongitude();
 
+            // s
             latti = loc.getLatitude();
             //Toast.makeText(getApplicationContext(), latti+" "+longi, Toast.LENGTH_SHORT).show();
         }
