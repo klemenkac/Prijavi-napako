@@ -132,7 +132,7 @@ public class ApplicationMy extends Application{
                     SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
                     String ime=sharedpreferences.getString("name",null);
 
-                    if(ime.equals("v"))
+                    if(ime.equals("v") || ime.equals("vzdrzevalec"))
                         vse=1;
                     else
                         vse=0;

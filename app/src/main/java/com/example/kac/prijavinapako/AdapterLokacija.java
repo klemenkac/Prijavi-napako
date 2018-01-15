@@ -146,16 +146,7 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
             holder.txtSoba.setTextColor(Color.DKGRAY);
         }
 
-        if(trenutni.getKoncano().equals("1")){
-            //crnobela slika
-            ColorMatrix matrix = new ColorMatrix();
-            matrix.setSaturation(0);
-            ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
-            holder.iv.setColorFilter(filter);
 
-            holder.txtDatum.setTextColor(000000);
-            holder.txtOpis.setTextColor(Color.DKGRAY);
-        }
 
         holder.txtDom.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -209,7 +200,17 @@ class AdapterLokacija extends RecyclerView.Adapter<AdapterLokacija.ViewHolder> {
         holder.txtTip.setText(trenutni.getTipNapake());
         holder.txtUser.setText(trenutni.getIdUser());
         holder.txtDatum.setText(trenutni.getDate());
+        if(trenutni.getKoncano().equals("1")){
+            //crnobela slika
+            ColorMatrix matrix = new ColorMatrix();
+            matrix.setSaturation(0);
+            ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+            holder.iv.setColorFilter(filter);
 
+            holder.txtDatum.setTextColor(Color.rgb(51, 153, 51));
+            holder.txtDatum.setText("Končano");
+            holder.txtOpis.setTextColor(Color.DKGRAY);
+        }
 
 
         byte[] decodedString = Base64.decode(trenutni.getFileName(), Base64.DEFAULT);

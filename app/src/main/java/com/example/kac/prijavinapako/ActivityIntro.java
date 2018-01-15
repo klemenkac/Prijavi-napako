@@ -33,6 +33,7 @@ public class ActivityIntro extends AppCompatActivity {
     }
 
     public void Play() {
+
         VideoView videoview = (VideoView) findViewById(R.id.videoView);
         Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.intro);
         videoview.setVideoURI(uri);
@@ -44,7 +45,7 @@ public class ActivityIntro extends AppCompatActivity {
                 SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedpreferences.edit();
 
-                editor.putString("prvaprijava", "NEEEE");
+                editor.putString("prvizagon", "NEEEE");
 
                 editor.commit();
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);

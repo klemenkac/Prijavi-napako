@@ -12,6 +12,7 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Environment;
@@ -83,8 +84,8 @@ public class ActivityLocation extends AppCompatActivity {
     TextView stanovalec;
     Lokacija l;
     String ID;
-    double latti;
-    double longi;
+    double latti=0.0;
+    double longi=0.0;
     PermissionGranted permissionGranted;
     MagicalCamera magicalCamera;
     boolean stateNew;
@@ -92,7 +93,9 @@ public class ActivityLocation extends AppCompatActivity {
     private int RESIZE_PHOTO_PIXELS_PERCENTAGE = 10;
 
 
-    static final int REQUEST_LOCATION = 1;
+
+
+
 
 
 
@@ -103,8 +106,6 @@ public class ActivityLocation extends AppCompatActivity {
             , "Dom 14", "Dom 15"};
 
     String [] TIPLIST = {"Elektro","Oprema","Vodovod","Ogrevanje","Internet","Požarne naprave","Drugo"};
-
-    private FusedLocationProviderClient mFusedLocationClient;
 
 
     @Override
@@ -149,29 +150,32 @@ public class ActivityLocation extends AppCompatActivity {
 
         ID="";
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        mFusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            String total2 = String.valueOf(location.getLatitude());
-                            Log.i("tag",total2);
-                            latti=location.getLatitude();
-                            longi=location.getLongitude();
-                        }
-                        else{
-                            Toast.makeText(getApplicationContext(), "Lokacije ni mogoče zaznati.", Toast.LENGTH_SHORT).show();
-
-                            latti=0.0;
-                            longi=0.0;
-                        }
-                    }
-                });
+        LocationManager locationManager = (LocationManager)
+                getSystemService(Context.LOCATION_SERVICE);
+        LocationListener locationListener = new MyLocationListener();
+        locationManager.requestLocationUpdates(
+                LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
     }
 
+    private class MyLocationListener implements LocationListener {
 
+        @Override
+        public void onLocationChanged(Location loc) {
+            longi= loc.getLongitude();
+
+            latti = loc.getLatitude();
+            //Toast.makeText(getApplicationContext(), latti+" "+longi, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {}
+
+        @Override
+        public void onProviderEnabled(String provider) {}
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {}
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode,permissions,grantResults);
@@ -182,6 +186,8 @@ public class ActivityLocation extends AppCompatActivity {
         magicalCamera.permissionGrant(requestCode, permissions, grantResults);
 
     }
+
+
 
 
     @Override
@@ -268,7 +274,8 @@ public class ActivityLocation extends AppCompatActivity {
             posljiButn.setVisibility(View.INVISIBLE);
             stanovalec.setVisibility(View.VISIBLE);
             stanovalec.setText(l.getIdUser());
-
+            }
+            if(l.getKoncano().equals("1")){
                 //crnobela slika
                 ColorMatrix matrix = new ColorMatrix();
                 matrix.setSaturation(0);
@@ -277,7 +284,6 @@ public class ActivityLocation extends AppCompatActivity {
                 if(l.getKoncano().equals("1"))
                     tvKoncano.setVisibility(View.VISIBLE);
             }
-
 
         }
 
@@ -311,7 +317,7 @@ public class ActivityLocation extends AppCompatActivity {
         Intent iin= getIntent();
         Bundle b = iin.getExtras();
         if(b.get("Vpisna")!=null){
-            Toast.makeText(this, b.get("Vpisna").toString(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, b.get("Vpisna").toString(), Toast.LENGTH_SHORT).show();
 
             if(b.get("Vpisna").equals("E1091722"))
             {
@@ -359,11 +365,15 @@ public class ActivityLocation extends AppCompatActivity {
         }
         else{
             app.save();
-            Toast.makeText(this,"Napaka shranjena", Toast.LENGTH_SHORT).show();        }
+            //Toast.makeText(this, "K:"+latti+" "+longi, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Napaka shranjena", Toast.LENGTH_SHORT).show();
+            }
 
     }
 
     public void onClickSaveMe(View v) {
+
+
         MaterialBetterSpinner domSpinner = (MaterialBetterSpinner)findViewById(spinnerDom);
         MaterialBetterSpinner tipSpinner = (MaterialBetterSpinner)findViewById(spinnerTipNapake);
         String ajdi = l.getId().toString();

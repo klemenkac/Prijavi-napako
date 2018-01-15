@@ -8,17 +8,13 @@
         android:title="@string/action_sort"
         app:showAsAction="ifRoom" />
 
-    <!-- Settings, should always be in the overflow -->
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        app:showAsAction="never"/>
 
     <item android:id="@+id/action_NFCzapis"
     android:title="NFC pisanje/branje"
     app:showAsAction="never"/>
 
     <item android:id="@+id/action_Weka"
-        android:title="Weka projekt"
+        android:title="Napoved napake"
         app:showAsAction="never"/>
 
     <item android:id="@+id/action_Intro"

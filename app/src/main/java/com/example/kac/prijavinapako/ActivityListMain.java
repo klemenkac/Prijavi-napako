@@ -74,10 +74,6 @@ public class ActivityListMain extends AppCompatActivity  {
                 startActivity(new Intent(this,ActivityNFCzapis.class));
                 return true;
 
-            case R.id.action_settings:
-                // User chose the "Settings" item, show the app settings UI...
-                startActivity(new Intent(this,ActivityMySettings.class));
-                return true;
 
             case R.id.action_Weka:
                 // User chose the "Settings" item, show the app settings UI...
@@ -138,7 +134,6 @@ public class ActivityListMain extends AppCompatActivity  {
 
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setBackgroundColor(getResources().getColor(R.color.colorGray));
         //fab.set
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

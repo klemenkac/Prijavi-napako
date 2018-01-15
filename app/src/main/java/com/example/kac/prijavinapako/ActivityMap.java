@@ -148,7 +148,7 @@ public class ActivityMap extends AppCompatActivity {
 
             for (int x = 0; x < lokacijaList.size(); x++) {
                 OverlayItem olItem = new OverlayItem(lokacijaList.get(x).getTipNapake(), lokacijaList.get(x).getDom(), new GeoPoint(lokacijaList.get(x).getX(), lokacijaList.get(x).getY()));
-                Drawable newMarker = this.getResources().getDrawable(R.drawable.marker_default);
+                Drawable newMarker = this.getResources().getDrawable(R.drawable.icon48);
                 olItem.setMarker(newMarker);
                 items.add(olItem);
             }

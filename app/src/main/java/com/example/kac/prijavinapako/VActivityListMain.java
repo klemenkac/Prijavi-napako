@@ -5,20 +5,15 @@ package com.example.kac.prijavinapako;
  */
 
 import android.Manifest;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
-import android.nfc.NfcManager;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -32,9 +27,6 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
-import com.example.DataAll;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
@@ -74,10 +66,6 @@ public class VActivityListMain extends AppCompatActivity  {
                 startActivity(new Intent(this,ActivityNFCzapis.class));
                 return true;
 
-            case R.id.action_settings:
-                // User chose the "Settings" item, show the app settings UI...
-                startActivity(new Intent(this,ActivityMySettings.class));
-                return true;
 
             case R.id.action_Weka:
                 // User chose the "Settings" item, show the app settings UI...
@@ -120,6 +108,14 @@ public class VActivityListMain extends AppCompatActivity  {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         app = (ApplicationMy) getApplication();
         setContentView(R.layout.activity_list_main);
+        setTitle("Vzdrževanje");
+        CoordinatorLayout layout =(CoordinatorLayout)findViewById(R.id.alm);
+        final int sdk = android.os.Build.VERSION.SDK_INT;
+        if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            layout.setBackgroundDrawable( getResources().getDrawable(R.drawable.vback) );
+        } else {
+            layout.setBackground( getResources().getDrawable(R.drawable.vback));
+        }
 
         mRecyclerView = (RecyclerView) findViewById(R.id.myrecycleview);
         mRecyclerView.setHasFixedSize(true);

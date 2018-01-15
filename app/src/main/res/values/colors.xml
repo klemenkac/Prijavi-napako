@@ -5,5 +5,5 @@
     <color name="colorAccent">#ffffff</color>
     <color name="colorGray">#cccccc</color>
     <color name="colorWhiteTrans">#99FFFFFF</color>
-    <color name="common_border_color">#FF3D7F</color>
+    <color name="common_border_color">#ff3d7f</color>
 </resources>
